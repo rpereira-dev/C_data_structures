@@ -1,3 +1,12 @@
+/**
+ *	This file is part of https://github.com/toss-dev/C_data_structures
+ *
+ *	It is under a GNU GENERAL PUBLIC LICENSE
+ *
+ *	This library is still in development, so please, if you find any issue, let me know about it on github.com
+ *	PEREIRA Romain
+*/
+
 #include "btree.h"
 
 /**
@@ -8,7 +17,7 @@ t_btree btree_new(t_cmp_function cmpf)
     t_btree btree;
 
     btree.head = NULL;
-    btree.itemcount = 0;
+    btree.size = 0;
     btree.cmpf = cmpf;
 	btree.values = array_list_new(16, sizeof(void*));
     return (btree);
@@ -115,7 +124,7 @@ void *btree_insert(t_btree *tree, void *value)
     if (_btree_insert(tree->cmpf, NULL, &(tree->head), value))
     {
 		array_list_push(&(tree->values), &(value));
-        tree->itemcount++;
+        tree->size++;
         return (value);
     }
     return (NULL);
@@ -141,7 +150,7 @@ void btree_delete(t_btree *btree)
 {
     _btree_delete_node(&(btree->head));
 	array_list_delete(&(btree->values));
-    btree->itemcount = 0;
+    btree->size = 0;
     btree->cmpf = 0;
 }
 
@@ -281,6 +290,7 @@ void *btree_remove_if(t_btree *tree, void *valueref, t_cmp_function cmpf)
 
     void *value = node->value;
     free(node);
+	tree->size--;
     return (value);
 }
 
@@ -292,27 +302,3 @@ void *btree_remove(t_btree *tree, void *valueref)
     return (btree_remove_if(tree, valueref, tree->cmpf));
 }
 
-/**
-int main()
-{
-	t_btree btree = btree_new((t_cmpf)strcmp);
-	btree_insert(&btree, strdup("D"));
-	btree_insert(&btree, strdup("J"));
-	btree_insert(&btree, strdup("A"));
-	btree_insert(&btree, strdup("H"));
-	btree_insert(&btree, strdup("B"));
-	
-	BTREE_ITER_START(btree, char *, str)
-	{
-		puts(str);
-	}
-	BTREE_ITER_END(btree, char *, str)
-
-	
-	btree_delete(&(btree));
-	
-	
-	return (0);
-}
-
-*/

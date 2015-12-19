@@ -1,17 +1,15 @@
-NAME	= libuc.a
+NAME = libuc.a
 
-SRCS	= array_list.c \
-	  linked_list.c \
-	  btree.c
-SRC 	= $(addprefix ./srcs/, $(SRCS))
+SRCS = array_list.c \
+		linked_list.c \
+		btree.c \
+		hmap.c
+SRC	= $(addprefix ./srcs/, $(SRCS))
 
-CC = gcc
-
+CC	= gcc
 OBJ	= $(SRC:.c=.o)
-
-INC 	= -I ./includes
-
-FLAGS	= -Wall -Werror -Wextra -g3
+INC	= -I ./includes
+FLAGS	= -Wall -Werror -Wextra -Ofast
 
 all: $(NAME)
 

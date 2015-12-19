@@ -1,3 +1,12 @@
+/**
+ *	This file is part of https://github.com/toss-dev/C_data_structures
+ *
+ *	It is under a GNU GENERAL PUBLIC LICENSE
+ *
+ *	This library is still in development, so please, if you find any issue, let me know about it on github.com
+ *	PEREIRA Romain
+*/
+
 #include "array_list.h"
 
 /**
@@ -152,7 +161,7 @@ void *array_list_raw(t_array_list *array)
 
 
 //TESTS
-/*
+
 int main()
 {
     puts("\tARRAY LIST TESTS STARTED");
@@ -252,4 +261,4 @@ int main()
 	return (1);
 }
 
-*/
+

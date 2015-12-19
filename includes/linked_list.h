@@ -1,3 +1,12 @@
+/**
+ *	This file is part of https://github.com/toss-dev/C_data_structures
+ *
+ *	It is under a GNU GENERAL PUBLIC LICENSE
+ *
+ *	This library is still in development, so please, if you find any issue, let me know about it on github.com
+ *	PEREIRA Romain
+*/
+
 #ifndef LINKED_LIST_H
 # define LINKED_LIST_H
 
@@ -68,14 +77,9 @@ void    *list_head(t_list *lst);
 void    list_clear(t_list *lst);
 
 /**
- *  write the list to a file descriptor
- */
-int     list_to_fd(t_list *list, int fd);
-
-/**
- *  read and return a list from the given file descriptor
+ * Return a buffer which holds pointers to every elements of the list, allocated with 'malloc()'
 */
-t_list  list_from_fd(int fd);
+void 	*list_buffer(t_list *lst);
 
 
 /** iterate on the list using a macro (optimized) */
@@ -94,3 +98,21 @@ t_list  list_from_fd(int fd);
 }
 
 #endif
+
+
+
+
+
+
+
+//ABOVE FUNCTIONS ARENT IMPLEMENTED YET:
+
+/**
+ *  write the list to a file descriptor
+ */
+int     list_to_fd(t_list *list, int fd);
+
+/**
+ *  read and return a list from the given file descriptor
+*/
+t_list  list_from_fd(int fd);

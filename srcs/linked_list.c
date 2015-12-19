@@ -1,3 +1,12 @@
+/**
+ *	This file is part of https://github.com/toss-dev/C_data_structures
+ *
+ *	It is under a GNU GENERAL PUBLIC LICENSE
+ *
+ *	This library is still in development, so please, if you find any issue, let me know about it on github.com
+ *	PEREIRA Romain
+*/
+
 #include "linked_list.h"
 
 /**
@@ -208,29 +217,29 @@ void list_delete(t_list *lst)
 		lst->size = 0;
 }
 
-
 /**
- *  write the list to a file descriptor
- */
-int list_to_fd(t_list *list, int fd)
-{	
-	//TODO
-	(void)list;
-	(void)fd;
-    return (0);
-}
-
-/**
- *  read and return a list from the given file descriptor
+ * Return a buffer which holds pointers to every elements of the list, allocated with 'malloc()'
 */
-t_list list_from_fd(int fd)
+void 	*list_buffer(t_list *lst)
 {
-	t_list lst;
+	void **buffer = (void**)malloc(sizeof(void*) * (lst->size + 1));
+	if (buffer == NULL)
+	{
+		return (NULL);
+	}
+
+    t_list_node *node = lst->head->next;
+	unsigned int i = 0;
 	
-	//TODO
-	
-	(void)fd;
-    return (lst);
+    while (node != lst->head)
+    {
+		buffer[i] = (void*)(node + 1);
+		++i;
+        node = node->next;
+	}
+
+	buffer[i] = NULL;
+	return ((void*)buffer);
 }
 
 

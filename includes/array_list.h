@@ -1,3 +1,12 @@
+/**
+ *	This file is part of https://github.com/toss-dev/C_data_structures
+ *
+ *	It is under a GNU GENERAL PUBLIC LICENSE
+ *
+ *	This library is still in development, so please, if you find any issue, let me know about it on github.com
+ *	PEREIRA Romain
+*/
+
 #ifndef ARRAY_LIST_H
 # define ARRAY_LIST_H
 
@@ -54,7 +63,7 @@ void    array_list_remove(t_array_list *array, unsigned int idx);
  *          [...]
  *          array_list_sort(&array, (t_cmp_function)strcmp);
 */
-void                array_list_sort(t_array_list *array, t_cmp_function cmpf);
+void	array_list_sort(t_array_list *array, t_cmp_function cmpf);
 
 /**
  *  Add every elements the end of the list
