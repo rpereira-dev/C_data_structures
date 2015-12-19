@@ -9,6 +9,25 @@
 
 #include "strings.h"
 
+
+/**
+
+
+    THIS FILE ISNT USED YET
+    
+    IT MAY BE USEFUL FOR A FUTURE STRING IMPLEMENTATION
+    
+    PLEASE, DO NOT CONSIDER THIS FILE AS PART OF THE LIBRARY FOR NOW
+    
+    TY XXXX
+
+
+*/
+
+
+
+
+
 /**
  * split the given string following the given delimiter, to an array of string
  * e.g: ("a, simple, test", ",") == ["a", " simple", " test", NULL, "a\0simple\0test\0"]
