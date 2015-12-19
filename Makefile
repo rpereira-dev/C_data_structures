@@ -1,9 +1,9 @@
-NAME = libuc.a
+NAME = libcstruct.a
 
 SRCS = array_list.c \
-		linked_list.c \
-		btree.c \
-		hmap.c
+       linked_list.c \
+       btree.c \
+       hmap.c
 SRC	= $(addprefix ./srcs/, $(SRCS))
 
 CC	= gcc

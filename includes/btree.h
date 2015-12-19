@@ -73,11 +73,11 @@ void btree_apply_suffix(t_btree *btree, t_function iterf);
 */
 											
 # define BTREE_ITER_START(B, T, V)	{\
-										ARRAY_LIST_ITER_START(B.values, void **, __ptr, __i)\
+										ARRAY_LIST_ITER_START(B->values, void **, __ptr, __i)\
 										{\
 											T V = (T)(*__ptr);
 # define BTREE_ITER_END(B, T, V)		}\
-										ARRAY_LIST_ITER_END(B.values, void **, __ptr, __i)\
+										ARRAY_LIST_ITER_END(B->values, void **, __ptr, __i)\
 									}
 
 #endif
