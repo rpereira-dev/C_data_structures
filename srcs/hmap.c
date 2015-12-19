@@ -29,6 +29,11 @@ t_hmap hmap_new(unsigned long int const capacity,
 
     unsigned long int size = sizeof(t_array_list) * c;
     void *values = malloc(size);
+    if (values == NULL)
+    {
+        t_hmap map = {0, 0, 0, 0, 0, 0, 0};
+        return (map);
+    }
     memset(values, 0, size);
 
     t_hmap hmap = {values, c, 0, hashf, keycmpf, datafreef, keyfreef};

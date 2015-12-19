@@ -14,9 +14,13 @@
  */
 t_list list_new(void)
 {
-    t_list	list;
+    t_list  list;
 
     list.head = (t_list_node*)malloc(sizeof(t_list_node));
+    if (list.head == NULL)
+    {
+        return (list);
+    }
     list.head->next = list.head;
     list.head->prev = list.head;
     list.size = 0;
