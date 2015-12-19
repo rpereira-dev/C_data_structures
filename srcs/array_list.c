@@ -89,6 +89,7 @@ void array_list_push_all(t_array_list *array, void *buffer, unsigned long int nb
         array_idx += copy_size;
     }
 }
+
 /**
  * get item by index
  */
@@ -161,7 +162,7 @@ void *array_list_raw(t_array_list *array)
 
 
 //TESTS
-
+/*
 int main()
 {
     puts("\tARRAY LIST TESTS STARTED");
@@ -190,12 +191,12 @@ int main()
     {
         printf("\n\tIterating on array...\n");
 		MICROSEC(t1);
-        ARRAY_LIST_ITER_START(array, char *, item, iterator)
+        ARRAY_LIST_ITER_START(&array, char *, item, iterator)
         {
             char c = *item;
             (void)c;
         }
-        ARRAY_LIST_ITER_END(array, char *, item, iterator);
+        ARRAY_LIST_ITER_END(&array, char *, item, iterator);
 		MICROSEC(t2);
 		t = t2 - t1;
         printf("\t\t%-30s%lf s\n", "time taken: ", t / 1000000.0f);
@@ -261,4 +262,4 @@ int main()
 	return (1);
 }
 
-
+*/

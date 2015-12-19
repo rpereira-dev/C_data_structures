@@ -31,7 +31,7 @@ typedef struct      s_array_list
  *
  * e.g: t_array_list array = array_list_new(16, sizeof(int));
 */
-t_array_list    array_list_new(unsigned long int nb, unsigned int elem_size);
+t_array_list array_list_new(unsigned long int nb, unsigned int elem_size);
 
 /**
  *  Add an element at the end of the list
@@ -41,17 +41,17 @@ int array_list_push(t_array_list *array, void *data);
 /**
  *  Clear the list (remove every data, and resize it to the default capacity)
 */
-void    array_list_clear(t_array_list *array);
+void array_list_clear(t_array_list *array);
 
 /**
  *  Delete DEFINETELY the list from memory
 */
-void    array_list_delete(t_array_list *array);
+void array_list_delete(t_array_list *array);
 
 /**
  *  remove the element at given index
 */
-void    array_list_remove(t_array_list *array, unsigned int idx);
+void array_list_remove(t_array_list *array, unsigned int idx);
 
 /**
  *  Sort the array list using std quicksort algorythm
@@ -63,21 +63,26 @@ void    array_list_remove(t_array_list *array, unsigned int idx);
  *          [...]
  *          array_list_sort(&array, (t_cmp_function)strcmp);
 */
-void	array_list_sort(t_array_list *array, t_cmp_function cmpf);
+void array_list_sort(t_array_list *array, t_cmp_function cmpf);
 
 /**
  *  Add every elements the end of the list
  *  this function is faster than calling multiples 'array_list_add()'
  *  so consider using it :)
 */
-void    array_list_push_all(t_array_list *array, void *buffer, unsigned long int nb);
+void array_list_push_all(t_array_list *array, void *buffer, unsigned long int nb);
 
 /**
  *  Get raw data of your array list
  *  (buffer of every data)
  *  You should really not use this function
 */
-void    *array_list_raw(t_array_list *array);
+void *array_list_raw(t_array_list *array);
+
+/**
+ * get item by index
+ */
+void *array_list_get(t_array_list *array, unsigned int idx);
 
 /**
  * Iterate on the array list using a macro
@@ -94,12 +99,10 @@ void    *array_list_raw(t_array_list *array);
  *          ARRAY_LIST_ITER_END(array, char *, str, i);
 */
 # define ARRAY_LIST_ITER_START(L, T, X, I)  {\
-                                                T X;\
                                                 unsigned long int I = 0;\
-                                                \
-                                                while (I < L.size)\
+                                                while (I < L->size)\
                                                 {\
-                                                    X = (T)L.data + I;
+                                                    T X = (T)(L->data + I);
 # define ARRAY_LIST_ITER_END(L, T, X, I)            ++I;\
                                                 }\
                                             }

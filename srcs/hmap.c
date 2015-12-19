@@ -16,7 +16,9 @@
  *	hashf    : hash function to use on inserted elements
  *	keycmpf  : comparison function to use when searching a data
  */
-t_hmap hmap_new(unsigned long int capacity, t_hash_function hashf, t_cmp_function keycmpf)
+t_hmap hmap_new(unsigned long int const capacity,
+				t_hash_function hashf, t_cmp_function keycmpf,
+				t_function keyfreef, t_function datafreef)
 {
     // set the hmap capacity to the closest power of two
     unsigned long int c = 1;
@@ -25,11 +27,11 @@ t_hmap hmap_new(unsigned long int capacity, t_hash_function hashf, t_cmp_functio
         c = c << 1;
     }
 
-	unsigned long int size = sizeof(t_btree) * c;
+	unsigned long int size = sizeof(t_array_list) * c;
     void *values = malloc(size);
 	memset(values, 0, size);
 	
-	t_hmap hmap = {values, c, 0, hashf, keycmpf};
+	t_hmap hmap = {values, c, 0, hashf, keycmpf, datafreef, keyfreef};
 
     return (hmap);
 }
@@ -42,31 +44,29 @@ t_hmap hmap_new(unsigned long int capacity, t_hash_function hashf, t_cmp_functio
 				i.e :	'NULL' if data shouldnt be free, 'free' if the data was allocated with a malloc,
 						'myfree' if this is structure which contains multiple allocated fields
  */
-void hmap_delete(t_hmap *hmap, t_function datafreef, t_function keyfreef)
+void hmap_delete(t_hmap *hmap)
 {
 	unsigned long int i = 0;
 	while (i < hmap->capacity)
 	{
-		t_btree *btree = hmap->_values + i;
-		if (btree->size)
+		t_array_list *array = hmap->values + i;
+		if (array->data)
 		{
-			ARRAY_LIST_ITER_START(btree->values, t_hmap_node *, node, j)
+			ARRAY_LIST_ITER_START(array, t_hmap_node *, node, j)
 			{
-				if (datafreef)
+				if (hmap->datafreef)
 				{
-					datafreef(node->data);
+					hmap->datafreef(node->data);
 				}
 				
-				if (keyfreef)
+				if (hmap->keyfreef)
 				{
-					keyfreef(node->key);
-				}
-				
-				free(node);
+					hmap->keyfreef(node->key);
+				}				
 			}
-			ARRAY_LIST_ITER_END(btree->values, t_hmap_node *, node, j)
+			ARRAY_LIST_ITER_END(array, t_hmap_node *, node, j)
 
-			btree_delete(btree);
+			array_list_delete(array);
 		}
 		++i;
 	}
@@ -85,25 +85,16 @@ void hmap_delete(t_hmap *hmap, t_function datafreef, t_function keyfreef)
 void const *hmap_insert(t_hmap *hmap, void const *data, void const *key)
 {
 	unsigned long int hash = hmap->hashf(key); //get the hash for this key
-	unsigned long int addr = hash & hmap->capacity; //get the binary tree from the hash
-	
-	t_hmap_node *nodeaddr = (t_hmap_node*)malloc(sizeof(t_hmap_node)); //create a new node
-	if (nodeaddr == NULL) //if allocation failed, return NULL
-	{
-		return (NULL);
-	}
+	unsigned long int addr = hash & (hmap->capacity - 1); //get the array list from the hash
 
-	t_hmap_node node = {hash, data, key}; //set the node data
-	memcpy(nodeaddr, &node, sizeof(t_hmap_node));
-	
-	t_btree *btree = hmap->_values + addr; //get the binary tree from it address
-	if (btree->values.data == NULL) //if the btree hasnt already been initialized
-	{
-		printf("New btree was set: %p\n", btree);
-		*btree = btree_new(NULL); //initialize it
-	}
+	t_hmap_node node = {hash, data, key}; //set the node buffer
 
-	//TODO : insert the node to the btree
+	t_array_list *array = hmap->values + addr; //get the array list from it address
+	if (array->data == NULL) //if the array list hasnt already been initialized
+	{
+		*array = array_list_new(4, sizeof(t_hmap_node)); //initialize it				
+	}
+	array_list_push(array, &node); //add the node to the list
 
 	hmap->size++;
 	return (data); //return the data
@@ -117,23 +108,111 @@ void const *hmap_insert(t_hmap *hmap, void const *data, void const *key)
  */
 void *hmap_get(t_hmap *hmap, void const *key)
 {
-	unsigned long int hash = hmap->hashf(key);
-	unsigned long int addr = hash & hmap->capacity;
+	unsigned long int hash = hmap->hashf(key); //get the hash for this key
+	unsigned long int addr = hash & (hmap->capacity - 1); //get the array list from the hash
+
+	t_array_list *array = hmap->values + addr; //array of collision for this key hash
 	
-	t_btree *btree = hmap->_values + addr;
-	if (btree->size == 0)
+	if (array->size == 0)
+	{
+		return (NULL);
+	}
+	
+	ARRAY_LIST_ITER_START(array, t_hmap_node *, node, i) //so compare the exact key to find the wanted data
+	{
+		printf("Comparing %s and %s\n", (char*)key, (char*)node->key);
+		if (hmap->keycmpf(key, node->key) == 0)
+		{
+			return ((void*)node->data);
+		}
+	}
+	ARRAY_LIST_ITER_END(array, t_hmap_node *, node, i)
+
+	return (NULL);
+}
+
+/**
+ *	Remove the data pointer from the hash map
+ *	return 1 if the element was removed, 0 elseway
+ *	hmap : the hash map
+ *	data : pointer to the data
+ */
+int hmap_remove_data(t_hmap *hmap, void const *data)
+{
+	unsigned long int i = 0;
+	while (i < hmap->capacity)
+	{
+		t_array_list *array = hmap->values + i;
+		ARRAY_LIST_ITER_START(array, t_hmap_node *, node, index)
+		{
+			if (node->data == data)
+			{
+				array_list_remove(array, index);
+				hmap->size--;
+				
+				if (hmap->datafreef)
+				{
+					hmap->datafreef(node->key);
+				}
+				
+				if (hmap->keyfreef)
+				{
+					hmap->keyfreef(node->key);
+				}
+				
+				free(node);
+				return (1);
+			}
+		}
+		ARRAY_LIST_ITER_END(array, t_hmap_node *, node, index)
+		++i;
+	}
+	return (0);
+}
+
+/**
+ *	Remove the data which match with the given key from the hash map
+ *	return 1 if the element was removed, 0 elseway
+ *
+ *	hmap : the hash map
+ *	key  : pointer to the key
+ */
+int hmap_remove_key(t_hmap *hmap, void const *key)
+{
+	unsigned long int hash = hmap->hashf(key); //get the hash for this key
+	unsigned long int addr = hash & (hmap->capacity - 1); //get the array list from the hash
+	
+	t_array_list *array = hmap->values + addr; //array of collision for this key hash
+	
+	if (array->size == 0)
 	{
 		return (0);
 	}
-	if (btree->size == 1)
-	{
-		return (btree->head->value);
-	}
 	
-	//TODO : here are collision, get the data from the tree which match exactly with the key
-		
-		
-	return (NULL);
+	ARRAY_LIST_ITER_START(array, t_hmap_node *, node, index) //so compare the exact key to find the wanted data
+	{
+		if (hmap->keycmpf(key, node->key) == 0)
+		{
+			array_list_remove(array, index);
+			
+			if (hmap->datafreef)
+			{
+				hmap->datafreef(node->key);
+			}
+			
+			if (hmap->keyfreef)
+			{
+				hmap->keyfreef(node->key);
+			}
+			
+			free(node);
+				
+			return (1);
+		}
+	}
+	ARRAY_LIST_ITER_END(array, t_hmap_node *, node, index)
+
+	return (0);
 }
 
 /**
@@ -145,6 +224,7 @@ unsigned long int strhash(char const *str)
     {
         return (0);
     }
+	
     unsigned long int hash = 5381;
     int c;
     while ((c = *str) != '\0')
@@ -165,12 +245,15 @@ unsigned long int inthash(int const value)
 
 int main()
 {
-    t_hmap hmap = hmap_new(1024, (t_hf)strhash, (t_cmpf)strcmp);
+    t_hmap hmap = hmap_new(1024, (t_hf)strhash, (t_cmpf)strcmp, free, free);
 	hmap_insert(&hmap, strdup("Hello world"), strdup("ima key"));
 	
-	char *str = hmap_get(&hmap, strdup("ima key"));
-	printf("size : %lu : %s\n", hmap.size, str);
+	char *key = strdup("ima key");
+	char *str = hmap_get(&hmap, key);
 	
-	hmap_delete(&hmap, free, free);
+	printf("{%s} from key {%s}\n", str, key);
+	
+	hmap_delete(&hmap);
+	free(key);
 	return (0);
 }

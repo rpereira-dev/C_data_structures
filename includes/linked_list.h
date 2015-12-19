@@ -85,13 +85,10 @@ void 	*list_buffer(t_list *lst);
 /** iterate on the list using a macro (optimized) */
 #define LIST_ITER_START(L, T, V) \
 {\
-    t_list_node *node;\
-    T V;\
-    \
-    node = L.head->next;\
-    while (node != L.head)\
+    t_list_node *node = L.head->next;\
+    while (node != L->head)\
     {\
-        V = (T)(node + 1);
+        T V = (T)(node + 1);
 #define LIST_ITER_END() \
         node = node->next; \
     }\

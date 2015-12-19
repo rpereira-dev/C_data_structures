@@ -11,7 +11,7 @@
 # define HMAP_H
 
 # include "common.h"
-# include "btree.h"
+# include "array_list.h"
 
 /**
  *	Generic hash map implementation in C89:
@@ -37,21 +37,23 @@ typedef struct	s_hmap_node
 
 typedef struct	s_hmap
 {
-	t_btree	*_values; //a buffer of btrees which will holds every values (to handle collision and to keep elements searching fast)
-	unsigned long int const capacity; //number of btrees
+	t_array_list *values; //a buffer of array list which will holds every values (to handle collision)
+	unsigned long int const capacity; //number of array list
 	unsigned long int size; //number of value set
 	t_hash_function const hashf; //hash function
 	t_cmp_function const keycmpf; //key comparison function, where node keys are sent as parameters
+	t_function const datafreef; //function call when a data object should be freed
+	t_function const keyfreef; //function called when a key should be freed
 }				t_hmap;
 
 /**
  *	Create a new hashmap:
  *
- *	capacity : capacity of the hashmap (number of binary tree boxes in memory)
+ *	capacity : capacity of the hashmap (number of array lists boxes in memory)
  *	hashf    : hash function to use on inserted elements
  *	cmpf     : comparison function to use when searching a data
 */
-t_hmap hmap_new(unsigned long int const capacity, t_hash_function hashf, t_cmp_function keycmpf);
+t_hmap hmap_new(unsigned long int const capacity, t_hash_function hashf, t_cmp_function keycmpf, t_function keyfreef, t_function datafreef);
 
 /**
  *	Delete the hashmap from the heap
@@ -62,7 +64,7 @@ t_hmap hmap_new(unsigned long int const capacity, t_hash_function hashf, t_cmp_f
  *						'myfree' if this is structure which contains multiple allocated fields ...
  *	keyfreef : same for the node key
  */
-void hmap_delete(t_hmap *hmap, t_function datafreef, t_function keyfreef);
+void hmap_delete(t_hmap *hmap);
 
 /**
  *	Insert a value into the hashmap:
@@ -85,6 +87,23 @@ void const *hmap_insert(t_hmap *hmap, void const *data, void const *key);
 void *hmap_get(t_hmap *hmap, void const *key);
 
 /**
+ *	Remove the data pointer from the hash map
+ *	return 1 if the element was removed, 0 elseway
+ *	hmap : the hash map
+ *	data : pointer to the data
+ */
+int hmap_remove_data(t_hmap *hmap, void const *data);
+
+/**
+ *	Remove the data which match with the given key from the hash map
+ *	return 1 if the element was removed, 0 elseway
+ *
+ *	hmap : the hash map
+ *	key  : pointer to the key
+ */
+int hmap_remove_key(t_hmap *hmap, void const *key);
+
+/**
  *	Some simple builtin hashes functions, useful for tests.
  *
  *	String hash is based on : http://www.cse.yorku.ca/~oz/hash.html
@@ -92,5 +111,28 @@ void *hmap_get(t_hmap *hmap, void const *key);
 unsigned long int strhash(char const *str);
 unsigned long int inthash(int const value);
 
+/**
+ *	Macro to iterate fastly though to hash map
+ *
+ *	i.e:
+ *		HMAP_ITER_START(hmap, char *, str)
+ *		{
+ *			puts(str);
+ *		}
+ *		HMAP_ITER_END(hmap, char *, str)
+ */
+# define HMAP_ITER_START(H, T, V)	{\
+											unsigned long int i = 0;\
+											while (i < H->capacity)\
+											{\
+												t_array_list *array = h->values + i;\
+												ARRAY_LIST_ITER_START(array, t_hmap_node *, node, j)\
+												{\
+													T V = (T)(node->data);
+# define HMAP_ITER_END(H, T, V)					}\
+												ARRAY_LIST_ITER_END(array, t_hmap_node *, node, j)\
+												++i;\
+											}\
+									}
 
 #endif
