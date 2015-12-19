@@ -5,7 +5,7 @@
  *
  *	This library is still in development, so please, if you find any issue, let me know about it on github.com
  *	PEREIRA Romain
-*/
+ */
 
 #include "btree.h"
 
@@ -19,7 +19,7 @@ t_btree btree_new(t_cmp_function cmpf)
     btree.head = NULL;
     btree.size = 0;
     btree.cmpf = cmpf;
-	btree.values = array_list_new(16, sizeof(void*));
+    btree.values = array_list_new(16, sizeof(void*));
     return (btree);
 }
 
@@ -27,7 +27,7 @@ t_btree btree_new(t_cmp_function cmpf)
 static t_btree_node *_btree_new_node(void *value)
 {
     t_btree_node *node = (t_btree_node*)malloc(sizeof(t_btree_node));
-    
+
     if (node == NULL)
     {
         return (NULL);
@@ -44,7 +44,7 @@ static void btree_node_swip_left(t_btree_node **node)
 {
     t_btree_node *head = *node;
     t_btree_node *right = head->right;
-    
+
     if (right == NULL)
     {
         return ;
@@ -55,10 +55,10 @@ static void btree_node_swip_left(t_btree_node **node)
     {
         tmp = tmp->left;
     }
-    
+
     tmp->left = head;
     tmp->left->right = NULL;
-    
+
     *node = right;
 }
 
@@ -67,26 +67,26 @@ static void btree_node_swip_right(t_btree_node **node)
 {
     t_btree_node *head = *node;
     t_btree_node *left = head->left;
-    
+
     if (left == NULL)
     {
         return ;
     }
- 
+
     t_btree_node *tmp = left;
     while (tmp->right != NULL)
     {
         tmp = tmp->right;
     }
-    
+
     tmp->right = head;
     tmp->right->left = NULL;
-    
+
     *node = left;
 }
 
 static int _btree_insert(t_cmp_function cmpf, t_btree_node **parent,
-                            t_btree_node **node, void *value)
+        t_btree_node **node, void *value)
 {
     if (*node == NULL)
     {
@@ -108,7 +108,7 @@ static int _btree_insert(t_cmp_function cmpf, t_btree_node **parent,
         }
         return (1);
     }
-    
+
     if (cmpf((*node)->value, value) < 0)
     {
         return (_btree_insert(cmpf, node, &((*node)->right), value));
@@ -123,7 +123,7 @@ void *btree_insert(t_btree *tree, void *value)
 {
     if (_btree_insert(tree->cmpf, NULL, &(tree->head), value))
     {
-		array_list_push(&(tree->values), &(value));
+        array_list_push(&(tree->values), &(value));
         tree->size++;
         return (value);
     }
@@ -149,7 +149,7 @@ static void _btree_delete_node(t_btree_node **node)
 void btree_delete(t_btree *btree)
 {
     _btree_delete_node(&(btree->head));
-	array_list_delete(&(btree->values));
+    array_list_delete(&(btree->values));
     btree->size = 0;
     btree->cmpf = 0;
 }
@@ -224,7 +224,7 @@ void btree_apply_prefix(t_btree *btree, t_function f)
 }
 
 static t_btree_node *_btree_search(t_btree_node *node,
-                                    void *valueref, t_cmp_function cmpf)   
+        void *valueref, t_cmp_function cmpf)   
 {
     if (node == NULL)
     {
@@ -236,12 +236,12 @@ static t_btree_node *_btree_search(t_btree_node *node,
     {
         return (node);
     }
-    
+
     if (r > 0)
     {
         return (_btree_search(node->left, valueref, cmpf));
     }
-    
+
     return (_btree_search(node->right, valueref, cmpf));
 }
 
@@ -263,7 +263,7 @@ void *btree_get(t_btree *btree, void *valueref, t_cmp_function cmpf)
 void *btree_remove_if(t_btree *tree, void *valueref, t_cmp_function cmpf)
 {
     t_btree_node *node = _btree_search(tree->head, valueref, cmpf);
-    
+
     if (node == NULL)
     {
         return (NULL);
@@ -290,7 +290,7 @@ void *btree_remove_if(t_btree *tree, void *valueref, t_cmp_function cmpf)
 
     void *value = node->value;
     free(node);
-	tree->size--;
+    tree->size--;
     return (value);
 }
 

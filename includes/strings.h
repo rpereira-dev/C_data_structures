@@ -5,7 +5,7 @@
  *
  *	This library is still in development, so please, if you find any issue, let me know about it on github.com
  *	PEREIRA Romain
-*/
+ */
 
 #ifndef STRINGS_H
 # define STRINGS_H

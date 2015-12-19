@@ -17,8 +17,8 @@
  *	keycmpf  : comparison function to use when searching a data
  */
 t_hmap hmap_new(unsigned long int const capacity,
-				t_hash_function hashf, t_cmp_function keycmpf,
-				t_function keyfreef, t_function datafreef)
+        t_hash_function hashf, t_cmp_function keycmpf,
+        t_function keyfreef, t_function datafreef)
 {
     // set the hmap capacity to the closest power of two
     unsigned long int c = 1;
@@ -27,11 +27,11 @@ t_hmap hmap_new(unsigned long int const capacity,
         c = c << 1;
     }
 
-	unsigned long int size = sizeof(t_array_list) * c;
+    unsigned long int size = sizeof(t_array_list) * c;
     void *values = malloc(size);
-	memset(values, 0, size);
-	
-	t_hmap hmap = {values, c, 0, hashf, keycmpf, datafreef, keyfreef};
+    memset(values, 0, size);
+
+    t_hmap hmap = {values, c, 0, hashf, keycmpf, datafreef, keyfreef};
 
     return (hmap);
 }
@@ -41,35 +41,35 @@ t_hmap hmap_new(unsigned long int const capacity,
  *
  *	hmap	:	hash map
  *	freef	:	function which will be called on node data and node key on node being freed.
-				i.e :	'NULL' if data shouldnt be free, 'free' if the data was allocated with a malloc,
-						'myfree' if this is structure which contains multiple allocated fields
+ i.e :	'NULL' if data shouldnt be free, 'free' if the data was allocated with a malloc,
+ 'myfree' if this is structure which contains multiple allocated fields
  */
 void hmap_delete(t_hmap *hmap)
 {
-	unsigned long int i = 0;
-	while (i < hmap->capacity)
-	{
-		t_array_list *array = hmap->values + i;
-		if (array->data)
-		{
-			ARRAY_LIST_ITER_START(array, t_hmap_node *, node, j)
-			{
-				if (hmap->datafreef)
-				{
-					hmap->datafreef(node->data);
-				}
-				
-				if (hmap->keyfreef)
-				{
-					hmap->keyfreef(node->key);
-				}				
-			}
-			ARRAY_LIST_ITER_END(array, t_hmap_node *, node, j)
+    unsigned long int i = 0;
+    while (i < hmap->capacity)
+    {
+        t_array_list *array = hmap->values + i;
+        if (array->data)
+        {
+            ARRAY_LIST_ITER_START(array, t_hmap_node *, node, j)
+            {
+                if (hmap->datafreef)
+                {
+                    hmap->datafreef(node->data);
+                }
 
-			array_list_delete(array);
-		}
-		++i;
-	}
+                if (hmap->keyfreef)
+                {
+                    hmap->keyfreef(node->key);
+                }				
+            }
+            ARRAY_LIST_ITER_END(array, t_hmap_node *, node, j)
+
+                array_list_delete(array);
+        }
+        ++i;
+    }
 }
 
 /**
@@ -81,23 +81,23 @@ void hmap_delete(t_hmap *hmap)
  *  size : size of the data (i.e, 'sizeof(t_data_structure)', 'strlen(str) + 1')
  *
  *	return the given data if it was inserted properly, NULL elseway
-*/
+ */
 void const *hmap_insert(t_hmap *hmap, void const *data, void const *key)
 {
-	unsigned long int hash = hmap->hashf(key); //get the hash for this key
-	unsigned long int addr = hash & (hmap->capacity - 1); //get the array list from the hash
+    unsigned long int hash = hmap->hashf(key); //get the hash for this key
+    unsigned long int addr = hash & (hmap->capacity - 1); //get the array list from the hash
 
-	t_hmap_node node = {hash, data, key}; //set the node buffer
+    t_hmap_node node = {hash, data, key}; //set the node buffer
 
-	t_array_list *array = hmap->values + addr; //get the array list from it address
-	if (array->data == NULL) //if the array list hasnt already been initialized
-	{
-		*array = array_list_new(4, sizeof(t_hmap_node)); //initialize it				
-	}
-	array_list_push(array, &node); //add the node to the list
+    t_array_list *array = hmap->values + addr; //get the array list from it address
+    if (array->data == NULL) //if the array list hasnt already been initialized
+    {
+        *array = array_list_new(4, sizeof(t_hmap_node)); //initialize it				
+    }
+    array_list_push(array, &node); //add the node to the list
 
-	hmap->size++;
-	return (data); //return the data
+    hmap->size++;
+    return (data); //return the data
 }
 
 /**
@@ -108,27 +108,27 @@ void const *hmap_insert(t_hmap *hmap, void const *data, void const *key)
  */
 void *hmap_get(t_hmap *hmap, void const *key)
 {
-	unsigned long int hash = hmap->hashf(key); //get the hash for this key
-	unsigned long int addr = hash & (hmap->capacity - 1); //get the array list from the hash
+    unsigned long int hash = hmap->hashf(key); //get the hash for this key
+    unsigned long int addr = hash & (hmap->capacity - 1); //get the array list from the hash
 
-	t_array_list *array = hmap->values + addr; //array of collision for this key hash
-	
-	if (array->size == 0)
-	{
-		return (NULL);
-	}
-	
-	ARRAY_LIST_ITER_START(array, t_hmap_node *, node, i) //so compare the exact key to find the wanted data
-	{
-		printf("Comparing %s and %s\n", (char*)key, (char*)node->key);
-		if (hmap->keycmpf(key, node->key) == 0)
-		{
-			return ((void*)node->data);
-		}
-	}
-	ARRAY_LIST_ITER_END(array, t_hmap_node *, node, i)
+    t_array_list *array = hmap->values + addr; //array of collision for this key hash
 
-	return (NULL);
+    if (array->size == 0)
+    {
+        return (NULL);
+    }
+
+    ARRAY_LIST_ITER_START(array, t_hmap_node *, node, i) //so compare the exact key to find the wanted data
+    {
+        printf("Comparing %s and %s\n", (char*)key, (char*)node->key);
+        if (hmap->keycmpf(key, node->key) == 0)
+        {
+            return ((void*)node->data);
+        }
+    }
+    ARRAY_LIST_ITER_END(array, t_hmap_node *, node, i)
+
+        return (NULL);
 }
 
 /**
@@ -139,35 +139,35 @@ void *hmap_get(t_hmap *hmap, void const *key)
  */
 int hmap_remove_data(t_hmap *hmap, void const *data)
 {
-	unsigned long int i = 0;
-	while (i < hmap->capacity)
-	{
-		t_array_list *array = hmap->values + i;
-		ARRAY_LIST_ITER_START(array, t_hmap_node *, node, index)
-		{
-			if (node->data == data)
-			{
-				array_list_remove(array, index);
-				hmap->size--;
-				
-				if (hmap->datafreef)
-				{
-					hmap->datafreef(node->key);
-				}
-				
-				if (hmap->keyfreef)
-				{
-					hmap->keyfreef(node->key);
-				}
-				
-				free(node);
-				return (1);
-			}
-		}
-		ARRAY_LIST_ITER_END(array, t_hmap_node *, node, index)
-		++i;
-	}
-	return (0);
+    unsigned long int i = 0;
+    while (i < hmap->capacity)
+    {
+        t_array_list *array = hmap->values + i;
+        ARRAY_LIST_ITER_START(array, t_hmap_node *, node, index)
+        {
+            if (node->data == data)
+            {
+                array_list_remove(array, index);
+                hmap->size--;
+
+                if (hmap->datafreef)
+                {
+                    hmap->datafreef(node->key);
+                }
+
+                if (hmap->keyfreef)
+                {
+                    hmap->keyfreef(node->key);
+                }
+
+                free(node);
+                return (1);
+            }
+        }
+        ARRAY_LIST_ITER_END(array, t_hmap_node *, node, index)
+            ++i;
+    }
+    return (0);
 }
 
 /**
@@ -179,40 +179,40 @@ int hmap_remove_data(t_hmap *hmap, void const *data)
  */
 int hmap_remove_key(t_hmap *hmap, void const *key)
 {
-	unsigned long int hash = hmap->hashf(key); //get the hash for this key
-	unsigned long int addr = hash & (hmap->capacity - 1); //get the array list from the hash
-	
-	t_array_list *array = hmap->values + addr; //array of collision for this key hash
-	
-	if (array->size == 0)
-	{
-		return (0);
-	}
-	
-	ARRAY_LIST_ITER_START(array, t_hmap_node *, node, index) //so compare the exact key to find the wanted data
-	{
-		if (hmap->keycmpf(key, node->key) == 0)
-		{
-			array_list_remove(array, index);
-			
-			if (hmap->datafreef)
-			{
-				hmap->datafreef(node->key);
-			}
-			
-			if (hmap->keyfreef)
-			{
-				hmap->keyfreef(node->key);
-			}
-			
-			free(node);
-				
-			return (1);
-		}
-	}
-	ARRAY_LIST_ITER_END(array, t_hmap_node *, node, index)
+    unsigned long int hash = hmap->hashf(key); //get the hash for this key
+    unsigned long int addr = hash & (hmap->capacity - 1); //get the array list from the hash
 
-	return (0);
+    t_array_list *array = hmap->values + addr; //array of collision for this key hash
+
+    if (array->size == 0)
+    {
+        return (0);
+    }
+
+    ARRAY_LIST_ITER_START(array, t_hmap_node *, node, index) //so compare the exact key to find the wanted data
+    {
+        if (hmap->keycmpf(key, node->key) == 0)
+        {
+            array_list_remove(array, index);
+
+            if (hmap->datafreef)
+            {
+                hmap->datafreef(node->key);
+            }
+
+            if (hmap->keyfreef)
+            {
+                hmap->keyfreef(node->key);
+            }
+
+            free(node);
+
+            return (1);
+        }
+    }
+    ARRAY_LIST_ITER_END(array, t_hmap_node *, node, index)
+
+        return (0);
 }
 
 /**
@@ -224,7 +224,7 @@ unsigned long int strhash(char const *str)
     {
         return (0);
     }
-	
+
     unsigned long int hash = 5381;
     int c;
     while ((c = *str) != '\0')
@@ -240,20 +240,20 @@ unsigned long int strhash(char const *str)
  */
 unsigned long int inthash(int const value)
 {
-	return (value);
+    return (value);
 }
 
 int main()
 {
     t_hmap hmap = hmap_new(1024, (t_hf)strhash, (t_cmpf)strcmp, free, free);
-	hmap_insert(&hmap, strdup("Hello world"), strdup("ima key"));
-	
-	char *key = strdup("ima key");
-	char *str = hmap_get(&hmap, key);
-	
-	printf("{%s} from key {%s}\n", str, key);
-	
-	hmap_delete(&hmap);
-	free(key);
-	return (0);
+    hmap_insert(&hmap, strdup("Hello world"), strdup("ima key"));
+
+    char *key = strdup("ima key");
+    char *str = hmap_get(&hmap, key);
+
+    printf("{%s} from key {%s}\n", str, key);
+
+    hmap_delete(&hmap);
+    free(key);
+    return (0);
 }

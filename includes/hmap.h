@@ -5,7 +5,7 @@
  *
  *	This library is still in development, so please, if you find any issue, let me know about it on github.com
  *	PEREIRA Romain 1973
-*/
+ */
 
 #ifndef HMAP_H
 # define HMAP_H
@@ -26,24 +26,24 @@
  *		t_hmap map = hmap_new(1024, (t_hf)strhash, (t_cmpf)strcmp);
  *		hmap_insert(&map, strdup("hello world"), strdup("ima key"), strlen("Hello world") + 1);
  *		char *helloworld = hmap_get(&map, "ima key"); //now contains "Hello world"
-*/
+ */
 
 typedef struct	s_hmap_node
 {
-	unsigned long int const hash; //hash of the key
-	void const *data; //the data holds
-	void const *key; //the key used	
+    unsigned long int const hash; //hash of the key
+    void const *data; //the data holds
+    void const *key; //the key used	
 }				t_hmap_node;
 
 typedef struct	s_hmap
 {
-	t_array_list *values; //a buffer of array list which will holds every values (to handle collision)
-	unsigned long int const capacity; //number of array list
-	unsigned long int size; //number of value set
-	t_hash_function const hashf; //hash function
-	t_cmp_function const keycmpf; //key comparison function, where node keys are sent as parameters
-	t_function const datafreef; //function call when a data object should be freed
-	t_function const keyfreef; //function called when a key should be freed
+    t_array_list *values; //a buffer of array list which will holds every values (to handle collision)
+    unsigned long int const capacity; //number of array list
+    unsigned long int size; //number of value set
+    t_hash_function const hashf; //hash function
+    t_cmp_function const keycmpf; //key comparison function, where node keys are sent as parameters
+    t_function const datafreef; //function call when a data object should be freed
+    t_function const keyfreef; //function called when a key should be freed
 }				t_hmap;
 
 /**
@@ -52,7 +52,7 @@ typedef struct	s_hmap
  *	capacity : capacity of the hashmap (number of array lists boxes in memory)
  *	hashf    : hash function to use on inserted elements
  *	cmpf     : comparison function to use when searching a data
-*/
+ */
 t_hmap hmap_new(unsigned long int const capacity, t_hash_function hashf, t_cmp_function keycmpf, t_function keyfreef, t_function datafreef);
 
 /**
@@ -75,7 +75,7 @@ void hmap_delete(t_hmap *hmap);
  *  size : size of the data (i.e, 'sizeof(t_data_structure)', 'strlen(str) + 1')
  *
  *	return the given data if it was inserted properly, NULL elseway
-*/
+ */
 void const *hmap_insert(t_hmap *hmap, void const *data, void const *key);
 
 /**
@@ -107,7 +107,7 @@ int hmap_remove_key(t_hmap *hmap, void const *key);
  *	Some simple builtin hashes functions, useful for tests.
  *
  *	String hash is based on : http://www.cse.yorku.ca/~oz/hash.html
-*/
+ */
 unsigned long int strhash(char const *str);
 unsigned long int inthash(int const value);
 
@@ -122,17 +122,17 @@ unsigned long int inthash(int const value);
  *		HMAP_ITER_END(hmap, char *, str)
  */
 # define HMAP_ITER_START(H, T, V)	{\
-											unsigned long int i = 0;\
-											while (i < H->capacity)\
-											{\
-												t_array_list *array = h->values + i;\
-												ARRAY_LIST_ITER_START(array, t_hmap_node *, node, j)\
-												{\
-													T V = (T)(node->data);
+    unsigned long int i = 0;\
+    while (i < H->capacity)\
+    {\
+        t_array_list *array = h->values + i;\
+        ARRAY_LIST_ITER_START(array, t_hmap_node *, node, j)\
+        {\
+            T V = (T)(node->data);
 # define HMAP_ITER_END(H, T, V)					}\
-												ARRAY_LIST_ITER_END(array, t_hmap_node *, node, j)\
-												++i;\
-											}\
-									}
+        ARRAY_LIST_ITER_END(array, t_hmap_node *, node, j)\
+        ++i;\
+    }\
+}
 
 #endif

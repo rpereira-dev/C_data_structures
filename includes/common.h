@@ -5,7 +5,7 @@
  *
  *	This library is still in development, so please, if you find any issue, let me know about it on github.com
  *	PEREIRA Romain
-*/
+ */
 
 #ifndef COMMON_H
 # define COMMON_H
@@ -25,10 +25,10 @@ typedef t_cmp_function t_cmpf;
 typedef t_hash_function t_hf;
 
 # define MICROSEC(V)    {\
-                            struct timeval tv;\
-                            gettimeofday(&tv, NULL);\
-                            V = 1000000 * tv.tv_sec + tv.tv_usec;\
-                        }
+    struct timeval tv;\
+    gettimeofday(&tv, NULL);\
+    V = 1000000 * tv.tv_sec + tv.tv_usec;\
+}
 
 
 #endif
