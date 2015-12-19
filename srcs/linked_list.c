@@ -246,7 +246,7 @@ void 	*list_buffer(t_list *lst)
     return ((void*)buffer);
 }
 
-
+/*
 int main()
 {
     puts("\tLINKED LIST TESTS STARTED");
@@ -277,3 +277,5 @@ int main()
 
     return (0);
 }
+
+*/
