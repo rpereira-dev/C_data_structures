@@ -123,7 +123,7 @@ void *btree_insert(t_btree *tree, void *value)
 {
     if (_btree_insert(tree->cmpf, NULL, &(tree->head), value))
     {
-        array_list_push(&(tree->values), &(value));
+        array_list_add(&(tree->values), &(value));
         tree->size++;
         return (value);
     }
@@ -258,12 +258,10 @@ void *btree_get(t_btree *btree, void *valueref, t_cmp_function cmpf)
 }
 
 /**
- *  remove the node if the test with node's value and given value return 0
+ *	remove the given node from the btree
  */
-void *btree_remove_if(t_btree *tree, void *valueref, t_cmp_function cmpf)
+void *btree_remove_node(t_btree *tree, t_btree_node *node)
 {
-    t_btree_node *node = _btree_search(tree->head, valueref, cmpf);
-
     if (node == NULL)
     {
         return (NULL);
@@ -295,6 +293,15 @@ void *btree_remove_if(t_btree *tree, void *valueref, t_cmp_function cmpf)
 }
 
 /**
+ *  remove the node if the test with node's value and given value return 0
+ */
+void *btree_remove_if(t_btree *tree, void *valueref, t_cmp_function cmpf)
+{
+    t_btree_node *node = _btree_search(tree->head, valueref, cmpf);
+	return (btree_remove_node(tree, node));
+}
+
+/**
  *  remove the node which contains the given value, and return it value address
  */
 void *btree_remove(t_btree *tree, void *valueref)
@@ -302,3 +309,19 @@ void *btree_remove(t_btree *tree, void *valueref)
     return (btree_remove_if(tree, valueref, tree->cmpf));
 }
 
+int main()
+{
+	t_btree btree = btree_new((t_cmpf)strcmp);
+	
+	btree_insert(&btree, strdup("8")); 
+	btree_insert(&btree, strdup("E")); 
+
+	
+	BTREE_ITER_START(&btree, char *, str)
+	{
+		printf("%p\n", str);
+	}
+	BTREE_ITER_END(&btree, char *, str)
+
+	return (0);
+}

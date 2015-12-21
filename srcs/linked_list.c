@@ -32,13 +32,12 @@ t_list list_new(void)
  */
 void *list_push(t_list *lst, void const *content, unsigned int content_size)
 {
-    t_list_node *node = (t_list_node*)malloc(sizeof(t_list_node) + content_size);
-    if (node == NULL)
-    {
-        return (NULL);
-    }
-    memcpy(node + 1, content, content_size);
-    node->content_size = content_size;
+	t_list_node *node = (t_list_node*)malloc(sizeof(t_list_node) + content_size);
+	if (node == NULL)
+	{
+		return (NULL);
+	}
+	memcpy(node + 1, content, content_size);
 
     t_list_node *tmp = lst->head->prev;
 
@@ -58,13 +57,12 @@ void *list_push(t_list *lst, void const *content, unsigned int content_size)
  */
 void *list_add(t_list *lst, void const *content, unsigned int content_size)
 {
-    t_list_node *node = (t_list_node*)malloc(sizeof(t_list_node) + content_size);
-    if (node == NULL)
-    {
-        return (NULL);
-    }
-    memcpy(node + 1, content, content_size);
-    node->content_size = content_size;
+	t_list_node *node = (t_list_node*)malloc(sizeof(t_list_node) + content_size);
+	if (node == NULL)
+	{
+		return (NULL);
+	}
+	memcpy(node + 1, content, content_size);
 
     t_list_node *tmp = lst->head->next;
 
@@ -79,8 +77,10 @@ void *list_add(t_list *lst, void const *content, unsigned int content_size)
     return (node + 1);
 }
 
-/** internal list function to remove a node */
-static void list_remove_node(t_list *lst, t_list_node *node)
+/**
+ *	remove the given node from the list
+ */
+void list_remove_node(t_list *lst, t_list_node *node)
 {
     if (node->prev)
     {
@@ -143,7 +143,7 @@ void *list_head(t_list *lst)
 {
     if (lst->size > 0)
     {
-        return (lst->head->next + 1);
+        return ((void*)lst->head->next + 1);
     }
     return (NULL);
 }
@@ -222,6 +222,15 @@ end:
 }
 
 /**
+ *	clear the list : remove every nodes
+ */
+void	list_clear(t_list *lst)
+{
+	list_delete(lst);
+	*lst = list_new();
+}
+
+/**
  * Return a buffer which holds pointers to every elements of the list, allocated with 'malloc()'
  */
 void 	*list_buffer(t_list *lst)
@@ -246,6 +255,18 @@ void 	*list_buffer(t_list *lst)
     return ((void*)buffer);
 }
 
+/**
+ *	iterate the function to every node content of the list
+ */
+void 	list_iterate(t_list *lst, t_function f)
+{
+	LIST_ITER_START(lst, void *, content)
+	{
+		f(content);
+	}
+	LIST_ITER_END(lst, void *, content)
+}
+
 /*
 int main()
 {
@@ -263,7 +284,7 @@ int main()
     MICROSEC(t1);
     while (i < max)
     {
-        list_push(&lst, "a", 2);
+        list_push(&lst, strdup("a"), 2);
         ++i;
     }
     MICROSEC(t2);
@@ -273,9 +294,14 @@ int main()
     printf("\t%-30s%lu\n", "list number of elements : ", lst.size);
     printf("\t%-30s%lf s\n", "time taken: ", t / 1000000.0f);
 
+
+	list_iterate(&lst, free);
+	list_delete(&lst);
+
     puts("\tLINKED LIST TESTS PASSED");
 
     return (0);
 }
-
 */
+
+

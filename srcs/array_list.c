@@ -50,7 +50,7 @@ static void array_list_expand(t_array_list *array)
 /**
  *  Add an element at the end of the list
  */
-int array_list_push(t_array_list *array, void *data)
+int array_list_add(t_array_list *array, void *data)
 {
     if (array->size == array->capacity)
     {
@@ -66,7 +66,7 @@ int array_list_push(t_array_list *array, void *data)
  *  this function is faster than calling multiples 'array_list_add()'
  *  so consider using it :)
  */
-void array_list_push_all(t_array_list *array, void *buffer, unsigned long int nb)
+void array_list_add_all(t_array_list *array, void *buffer, unsigned long int nb)
 {
     unsigned int array_idx = array->size * array->elem_size;
     while (nb)
@@ -107,10 +107,11 @@ void array_list_remove(t_array_list *array, unsigned int idx)
     {
         return ;
     }
-    int begin = idx * array->elem_size;
-    int end = (array->size - 1) * array->elem_size;
-
+    
+	unsigned int begin = idx * array->elem_size;
+    unsigned int end = (array->size - 1) * array->elem_size;    
     memmove(array->data + begin, array->data + begin + array->elem_size, end - begin);
+	
     array->size--;
 }
 
@@ -162,104 +163,105 @@ void *array_list_raw(t_array_list *array)
 
 
 //TESTS
+
 /*
-   int main()
-   {
-   puts("\tARRAY LIST TESTS STARTED");
-   t_array_list array = array_list_new(16, 1);
-
-   unsigned long int i = 0;
-   unsigned long int max = 10000000;
-   unsigned long int t1;
-   unsigned long int t2;
-   unsigned long int t;
-
-   MICROSEC(t1);
-   while (i < max)
-   {
-   array_list_push(&array, "a");
-   ++i;
-   }
-   MICROSEC(t2);
-   t = t2 - t1;
-
-   printf("\t\t%-30s%lu\n", "elements pushed : ", max);
-   printf("\t\t%-30s%lu\n", "array number of elements : ", array.size);
-   printf("\t\t%-30s%lu\n", "array capacity now : ", array.capacity);
-   printf("\t\t%-30s%lf s\n", "time taken: ", t / 1000000.0f);
-
-   {
-   printf("\n\tIterating on array...\n");
-   MICROSEC(t1);
-   ARRAY_LIST_ITER_START(&array, char *, item, iterator)
-   {
-   char c = *item;
-   (void)c;
-   }
-   ARRAY_LIST_ITER_END(&array, char *, item, iterator);
-   MICROSEC(t2);
-   t = t2 - t1;
-   printf("\t\t%-30s%lf s\n", "time taken: ", t / 1000000.0f);
-   }
-
-   {
-   unsigned long int toremove = max / 1000;
-   printf("\n\tRemoving %lu last elements ...\n", toremove);
-   MICROSEC(t1);
-   while (toremove)
-   {
-   array_list_remove(&array, array.size - 1);
-   --toremove;
-   }
-   MICROSEC(t2);
-   t = t2 - t1;
-   printf("\t\t%-30s%lf s\n", "time taken: ", t / 1000000.0f);
-   }
-
-   {
-   unsigned long int toremove = max / 1000;
-   printf("\n\tRemoving %lu first elements ...\n", toremove);
-   MICROSEC(t1);
-   while (toremove)
-   {
-   array_list_remove(&array, 0);
-   --toremove;
-   }
-   MICROSEC(t2);
-   t = t2 - t1;
-   printf("\t\t%-30s%lf s\n", "time taken: ", t / 1000000.0f);
-   }
-
-
-
-   {
-unsigned long int toremove = max / 1000;
-unsigned long int middle = (max - toremove) / 2;
-printf("\n\t\tRemoving %lu middle elements ...\n", toremove);
-MICROSEC(t1);
-while (toremove)
+int main()
 {
-    array_list_remove(&array, middle + toremove);
-    --toremove;
-}
-MICROSEC(t2);
-t = t2 - t1;
-printf("\t\t%-30s%lf s\n", "time taken: ", t / 1000000.0f);
-}
+    puts("\tARRAY LIST TESTS STARTED");
+    t_array_list array = array_list_new(16, 1);
 
-{
-    printf("\n\tDeleting array...\n");
+    unsigned long int i = 0;
+    unsigned long int max = 10000000;
+    unsigned long int t1;
+    unsigned long int t2;
+    unsigned long int t;
+
     MICROSEC(t1);
-    array_list_delete(&array);
+    while (i < max)
+    {
+        array_list_push(&array, "a");
+        ++i;
+    }
     MICROSEC(t2);
     t = t2 - t1;
+
+    printf("\t\t%-30s%lu\n", "elements pushed : ", max);
     printf("\t\t%-30s%lu\n", "array number of elements : ", array.size);
     printf("\t\t%-30s%lu\n", "array capacity now : ", array.capacity);
     printf("\t\t%-30s%lf s\n", "time taken: ", t / 1000000.0f);
-}
 
-puts("\tARRAY LIST TESTS PASSED");
-return (1);
+    {
+        printf("\n\tIterating on array...\n");
+        MICROSEC(t1);
+        ARRAY_LIST_ITER_START(&array, char *, item, iterator)
+        {
+            char c = *item;
+            (void)c;
+        }
+        ARRAY_LIST_ITER_END(&array, char *, item, iterator);
+        MICROSEC(t2);
+        t = t2 - t1;
+        printf("\t\t%-30s%lf s\n", "time taken: ", t / 1000000.0f);
+    }
+
+    {
+        unsigned long int toremove = max / 1000;
+        printf("\n\tRemoving %lu last elements ...\n", toremove);
+        MICROSEC(t1);
+        while (toremove)
+        {
+            array_list_remove(&array, array.size - 1);
+            --toremove;
+        }
+        MICROSEC(t2);
+        t = t2 - t1;
+        printf("\t\t%-30s%lf s\n", "time taken: ", t / 1000000.0f);
+    }
+
+    {
+        unsigned long int toremove = max / 1000;
+        printf("\n\tRemoving %lu first elements ...\n", toremove);
+        MICROSEC(t1);
+        while (toremove)
+        {
+            array_list_remove(&array, 0);
+            --toremove;
+        }
+        MICROSEC(t2);
+        t = t2 - t1;
+        printf("\t\t%-30s%lf s\n", "time taken: ", t / 1000000.0f);
+    }
+
+
+
+    {
+        unsigned long int toremove = max / 1000;
+        unsigned long int middle = (max - toremove) / 2;
+        printf("\n\t\tRemoving %lu middle elements ...\n", toremove);
+        MICROSEC(t1);
+        while (toremove)
+        {
+            array_list_remove(&array, middle + toremove);
+            --toremove;
+        }
+        MICROSEC(t2);
+        t = t2 - t1;
+        printf("\t\t%-30s%lf s\n", "time taken: ", t / 1000000.0f);
+    }
+
+    {
+        printf("\n\tDeleting array...\n");
+        MICROSEC(t1);
+        array_list_delete(&array);
+        MICROSEC(t2);
+        t = t2 - t1;
+        printf("\t\t%-30s%lu\n", "array number of elements : ", array.size);
+        printf("\t\t%-30s%lu\n", "array capacity now : ", array.capacity);
+        printf("\t\t%-30s%lf s\n", "time taken: ", t / 1000000.0f);
+    }
+
+    puts("\tARRAY LIST TESTS PASSED");
+    return (1);
 }
 
 */

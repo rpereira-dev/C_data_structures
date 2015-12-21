@@ -11,7 +11,7 @@
 # define HMAP_H
 
 # include "common.h"
-# include "array_list.h"
+# include "linked_list.h"
 
 /**
  *	Generic hash map implementation in C89:
@@ -19,6 +19,7 @@
  *	ABOUT THE IMPLEMENTATION:
  *		- given pointer address are saved for values. No copy their data are done. (same for keys)
  *		- const where used where on constant data (well...), so you dont mess up the hash map :)
+ *		- an array of linked list is used to handle collisions
  *
  * 
  *	example for a string hashmap:
@@ -27,7 +28,7 @@
  *		hmap_insert(&map, strdup("hello world"), strdup("ima key"), strlen("Hello world") + 1);
  *		char *helloworld = hmap_get(&map, "ima key"); //now contains "Hello world"
  */
-
+ 
 typedef struct	s_hmap_node
 {
     unsigned long int const hash; //hash of the key
@@ -37,8 +38,8 @@ typedef struct	s_hmap_node
 
 typedef struct	s_hmap
 {
-    t_array_list *values; //a buffer of array list which will holds every values (to handle collision)
-    unsigned long int const capacity; //number of array list
+    t_list *values; //a buffer of boxes will holds every values (to handle collision)
+    unsigned long int const capacity; //number of lists
     unsigned long int size; //number of value set
     t_hash_function const hashf; //hash function
     t_cmp_function const keycmpf; //key comparison function, where node keys are sent as parameters
@@ -49,7 +50,7 @@ typedef struct	s_hmap
 /**
  *	Create a new hashmap:
  *
- *	capacity : capacity of the hashmap (number of array lists boxes in memory)
+ *	capacity : capacity of the hashmap (number of lists boxes in memory)
  *	hashf    : hash function to use on inserted elements
  *	cmpf     : comparison function to use when searching a data
  */
@@ -125,12 +126,12 @@ unsigned long int inthash(int const value);
     unsigned long int i = 0;\
     while (i < H->capacity)\
     {\
-        t_array_list *array = h->values + i;\
-        ARRAY_LIST_ITER_START(array, t_hmap_node *, node, j)\
+        t_list *lst = h->values + i;\
+		LIST_ITER_START(lst, t_hmap_node *, node, j)\
         {\
             T V = (T)(node->data);
 # define HMAP_ITER_END(H, T, V)					}\
-        ARRAY_LIST_ITER_END(array, t_hmap_node *, node, j)\
+        LIST_ITER_END(lst, t_hmap_node *, node, j)\
         ++i;\
     }\
 }

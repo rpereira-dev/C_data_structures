@@ -62,6 +62,11 @@ void *btree_remove_if(t_btree *tree, void *valueref, t_cmp_function cmpf);
 void *btree_remove(t_btree *tree, void *valueref);
 
 /**
+ *	remove the given node from the btree
+ */
+void *btree_remove_node(t_btree *tree, t_btree_node *node);
+
+/**
  *	Apply the function to every bin tree data, in the prefix, infix, or suffix order
  */
 void btree_apply_prefix(t_btree *btree, t_function iterf);
@@ -73,11 +78,11 @@ void btree_apply_suffix(t_btree *btree, t_function iterf);
  */
 
 # define BTREE_ITER_START(B, T, V)	{\
-    ARRAY_LIST_ITER_START(B->values, void **, __ptr, __i)\
+    ARRAY_LIST_ITER_START(&(B)->values, void **, __ptr, __i)\
     {\
         T V = (T)(*__ptr);
 # define BTREE_ITER_END(B, T, V)		}\
-    ARRAY_LIST_ITER_END(B->values, void **, __ptr, __i)\
+    ARRAY_LIST_ITER_END(&(B)->values, void **, __ptr, __i)\
 }
 
 #endif

@@ -15,14 +15,14 @@
 # include <stdlib.h>
 # include <stdio.h>
 
-typedef struct      s_array_list
+typedef struct	s_array_list
 {
     char                *data;
     unsigned long int   capacity;
     unsigned long int   size;
     unsigned int        elem_size;
     unsigned int        default_capacity;
-}                   t_array_list;
+}				t_array_list;
 
 /**
  * Create a new array list
@@ -36,7 +36,7 @@ t_array_list array_list_new(unsigned long int nb, unsigned int elem_size);
 /**
  *  Add an element at the end of the list
  */
-int array_list_push(t_array_list *array, void *data);
+int array_list_add(t_array_list *array, void *data);
 
 /**
  *  Clear the list (remove every data, and resize it to the default capacity)
@@ -70,7 +70,7 @@ void array_list_sort(t_array_list *array, t_cmp_function cmpf);
  *  this function is faster than calling multiples 'array_list_add()'
  *  so consider using it :)
  */
-void array_list_push_all(t_array_list *array, void *buffer, unsigned long int nb);
+void array_list_add_all(t_array_list *array, void *buffer, unsigned long int nb);
 
 /**
  *  Get raw data of your array list
@@ -100,9 +100,9 @@ void *array_list_get(t_array_list *array, unsigned int idx);
  */
 # define ARRAY_LIST_ITER_START(L, T, X, I)  {\
     unsigned long int I = 0;\
-    while (I < L->size)\
+    while (I < (L)->size)\
     {\
-        T X = (T)(L->data + I);
+        T X = (T)((L)->data + I);
 # define ARRAY_LIST_ITER_END(L, T, X, I)            ++I;\
     }\
 }
