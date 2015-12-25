@@ -35,12 +35,12 @@ t_list  list_new(void);
 /**
  *  Add an element at the end of the list
  */
-void 	*list_push(t_list *lst, void const *content, unsigned int content_size);
+void 	*list_add(t_list *lst, void const *content, unsigned int content_size);
 
 /**
  * Add an element in head of the list
  */
-void 	*list_add(t_list *lst, void const *content, unsigned int content_size);
+void 	*list_addfront(t_list *lst, void const *content, unsigned int content_size);
 
 /**
  *  Return the list node data which match with the given comparison function

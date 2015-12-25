@@ -30,7 +30,7 @@ t_list list_new(void)
 /**
  *  Add an element at the end of the list
  */
-void *list_push(t_list *lst, void const *content, unsigned int content_size)
+void *list_add(t_list *lst, void const *content, unsigned int content_size)
 {
 	t_list_node *node = (t_list_node*)malloc(sizeof(t_list_node) + content_size);
 	if (node == NULL)
@@ -55,7 +55,7 @@ void *list_push(t_list *lst, void const *content, unsigned int content_size)
 /**
  * Add an element in head of the list
  */
-void *list_add(t_list *lst, void const *content, unsigned int content_size)
+void *list_addfront(t_list *lst, void const *content, unsigned int content_size)
 {
 	t_list_node *node = (t_list_node*)malloc(sizeof(t_list_node) + content_size);
 	if (node == NULL)
@@ -284,7 +284,7 @@ int main()
     MICROSEC(t1);
     while (i < max)
     {
-        list_push(&lst, strdup("a"), 2);
+        list_add(&lst, strdup("a"), 2);
         ++i;
     }
     MICROSEC(t2);

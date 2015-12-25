@@ -98,7 +98,7 @@ void const *hmap_insert(t_hmap *hmap, void const *data, void const *key)
     {
         *lst = list_new(); //initialize it				
     }
-    list_push(lst, &node, sizeof(t_hmap_node)); //add the node to the list
+    list_add(lst, &node, sizeof(t_hmap_node)); //add the node to the list
 
     hmap->size++;
     return (data); //return the data

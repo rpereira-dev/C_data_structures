@@ -78,8 +78,10 @@ int str_append(t_str *str, wchar_t *cs)
 int main()
 {
 	t_str str = str_new(L"Hello world");
+
 	str_set_char(&str, L'ê', 1);
 	str_append(&str, L" dés äccênts");
+
 	printf("%S\n", str.ptr);
 
 	puts("done");
