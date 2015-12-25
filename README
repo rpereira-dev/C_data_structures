@@ -6,3 +6,6 @@ It contains:
     - Linked list (which can be used as Queue or Stacks without performance loss)
     - Binary trees
     - Hash map
+
+
+Strings are not done (and compiled into the library yet)
