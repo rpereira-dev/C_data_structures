@@ -102,8 +102,9 @@ void *array_list_get(t_array_list *array, unsigned int idx);
     unsigned long int I = 0;\
     while (I < (L)->size)\
     {\
-        T X = (T)((L)->data + I);
-# define ARRAY_LIST_ITER_END(L, T, X, I)            ++I;\
+        T X = *(((T*)(L)->data) + I);
+# define ARRAY_LIST_ITER_END(L, T, X, I)\
+	++I;\
     }\
 }
 
