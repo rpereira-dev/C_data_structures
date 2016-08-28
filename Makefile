@@ -1,14 +1,9 @@
 NAME = libcstruct.a
 
-SRCS = array_list.c \
-       linked_list.c \
-       btree.c \
-       hmap.c \
-       vec3.c
-SRC	= $(addprefix ./srcs/, $(SRCS))
+SRCS = $(wildcard ./srcs/*.c)
 
 CC	= gcc
-OBJ	= $(SRC:.c=.o)
+OBJ	= $(SRCS:.c=.o)
 INC	= -I ./includes
 FLAGS	= -Wall -Werror -Wextra -Ofast
 

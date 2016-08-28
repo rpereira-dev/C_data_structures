@@ -17,31 +17,34 @@ typedef struct	s_vec3
 	union {
 		float x;
 		float r;
+		float pitch;
 	};
 
 	union {
 		float y;
 		float g;
+		float yaw;
 	};
 
 	union {
 		float z;
 		float b;
+		float roll;
 	};
 }				t_vec3;
 
 /** create a new vec3 */
-t_vec3 * vec_new(void);
+t_vec3 * vec3_new(void);
 
 /** delete the vec3 */
 void vec3_delete(t_vec3 * vec);
 
 /** set the vec3 to 0 */
-void vec3_bzero(t_vec3 * vec);
+t_vec3 * vec3_bzero(t_vec3 * dst);
 
 /** set the vec3 values */
-void vec3_set(t_vec3 * dst, float x, float y, float z);
-void vec3_set3(t_vec3 * vec);
+t_vec3 * vec3_set(t_vec3 * dst, float x, float y, float z);
+t_vec3 * vec3_set3(t_vec3 * dst, t_vec3 * vec);
 
 /** add two vec3 */
 t_vec3 * vec3_add(t_vec3 * dst, t_vec3 * a, t_vec3 * b);

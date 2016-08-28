@@ -19,20 +19,25 @@ typedef struct	s_vec4
 		float z;
 		float b;
 	};
+
+	union {
+		float w;
+		float a;
+	};
 }				t_vec4;
 
 /** create a new vec4 */
-t_vec4 * vec_new(void);
+t_vec4 * vec4_new(void);
 
 /** delete the vec4 */
 void vec4_delete(t_vec4 * vec);
 
 /** set the vec4 to 0 */
-void vec4_bzero(t_vec4 * vec);
+t_vec4 * vec4_bzero(t_vec4 * dst);
 
 /** set the vec4 values */
-void vec4_set(t_vec4 * dst, float x, float y, float z);
-void vec4_set3(t_vec4 * vec);
+t_vec4 * vec4_set(t_vec4 * dst, float x, float y, float z, float w);
+t_vec4 * vec4_set4(t_vec4 * dst, t_vec4 * vec);
 
 /** add two vec4 */
 t_vec4 * vec4_add(t_vec4 * dst, t_vec4 * a, t_vec4 * b);
