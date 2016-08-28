@@ -33,7 +33,7 @@ t_vec4 * vec4_new(void);
 void vec4_delete(t_vec4 * vec);
 
 /** set the vec4 to 0 */
-t_vec4 * vec4_bzero(t_vec4 * dst);
+t_vec4 * vec4_zero(t_vec4 * dst);
 
 /** set the vec4 values */
 t_vec4 * vec4_set(t_vec4 * dst, float x, float y, float z, float w);

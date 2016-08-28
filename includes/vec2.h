@@ -23,7 +23,7 @@ t_vec2 * vec2_new(void);
 void vec2_delete(t_vec2 * vec);
 
 /** set the vec2 to 0 */
-t_vec2 * vec2_bzero(t_vec2 * dst);
+t_vec2 * vec2_zero(t_vec2 * dst);
 
 /** set the vec2 values */
 t_vec2 * vec2_set(t_vec2 * dst, float x, float y);

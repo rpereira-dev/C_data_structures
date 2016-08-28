@@ -40,7 +40,7 @@ t_vec3 * vec3_new(void);
 void vec3_delete(t_vec3 * vec);
 
 /** set the vec3 to 0 */
-t_vec3 * vec3_bzero(t_vec3 * dst);
+t_vec3 * vec3_zero(t_vec3 * dst);
 
 /** set the vec3 values */
 t_vec3 * vec3_set(t_vec3 * dst, float x, float y, float z);
