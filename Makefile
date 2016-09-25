@@ -2,7 +2,6 @@ NAME = libcstruct.a
 
 SRCS = $(wildcard ./srcs/*.c)
 
-CC	= gcc
 OBJ	= $(SRCS:.c=.o)
 INC	= -I ./includes
 FLAGS	= -Wall -Werror -Wextra -Ofast
