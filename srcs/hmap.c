@@ -222,6 +222,7 @@ unsigned long int inthash(int const value) {
     return (value);
 }
 
+/*
 int main() {
     t_hmap hmap = hmap_new(1024, (t_hf)strhash, (t_cmpf)strcmp, free, free);
     hmap_insert(&hmap, strdup("Hello world"), strdup("ima key"));
@@ -244,3 +245,4 @@ int main() {
     return (0);
 }
 
+*/
