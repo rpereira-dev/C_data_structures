@@ -147,7 +147,7 @@ void * array_list_raw(t_array_list * array) {
 
 
 //TESTS
-
+/*
 int main()
 {
     puts("\tARRAY LIST TESTS STARTED");
@@ -244,3 +244,4 @@ int main()
     puts("\tARRAY LIST TESTS PASSED");
     return (1);
 }
+*/

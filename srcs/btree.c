@@ -265,7 +265,7 @@ void * btree_remove(t_btree * tree, void * valueref) {
     return (btree_remove_if(tree, valueref, tree->cmpf));
 }
 
-
+/*
 int main() {
 	t_btree * btree = btree_new((t_cmpf)strcmp);
 	
@@ -281,3 +281,4 @@ int main() {
 
 	return (0);
 }
+*/

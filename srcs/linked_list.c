@@ -250,6 +250,7 @@ void list_iterate(t_list * lst, t_function f)
 }
 
 
+/*
 int main()
 {
     puts("\tLINKED LIST TESTS STARTED");
@@ -283,5 +284,5 @@ int main()
 
     return (0);
 }
-
+*/
 
