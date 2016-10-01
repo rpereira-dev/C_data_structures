@@ -12,13 +12,11 @@
 /**
  * Create a new linked list
  */
-t_list list_new(void)
-{
+t_list list_new(void) {
     t_list  list;
 
     list.head = (t_list_node*)malloc(sizeof(t_list_node));
-    if (list.head == NULL)
-    {
+    if (list.head == NULL) {
         return (list);
     }
     list.head->next = list.head;
@@ -30,11 +28,10 @@ t_list list_new(void)
 /**
  *  Add an element at the end of the list
  */
-void *list_add(t_list *lst, void const *content, unsigned int content_size)
+void * list_add(t_list * lst, void const *content, unsigned int content_size)
 {
 	t_list_node *node = (t_list_node*)malloc(sizeof(t_list_node) + content_size);
-	if (node == NULL)
-	{
+	if (node == NULL) {
 		return (NULL);
 	}
 	memcpy(node + 1, content, content_size);
@@ -55,11 +52,9 @@ void *list_add(t_list *lst, void const *content, unsigned int content_size)
 /**
  * Add an element in head of the list
  */
-void *list_addfront(t_list *lst, void const *content, unsigned int content_size)
-{
-	t_list_node *node = (t_list_node*)malloc(sizeof(t_list_node) + content_size);
-	if (node == NULL)
-	{
+void * list_addfront(t_list * lst, void const *content, unsigned int content_size) {
+	t_list_node * node = (t_list_node *) malloc(sizeof(t_list_node) + content_size);
+	if (node == NULL) {
 		return (NULL);
 	}
 	memcpy(node + 1, content, content_size);
@@ -80,14 +75,11 @@ void *list_addfront(t_list *lst, void const *content, unsigned int content_size)
 /**
  *	remove the given node from the list
  */
-void list_remove_node(t_list *lst, t_list_node *node)
-{
-    if (node->prev)
-    {
+void list_remove_node(t_list * lst, t_list_node *node) {
+    if (node->prev) {
         node->prev->next = node->next;
     }
-    if (node->next)
-    {
+    if (node->next) {
         node->next->prev = node->prev;
     }
 
@@ -100,20 +92,16 @@ void list_remove_node(t_list *lst, t_list_node *node)
 /**
  * Remove first / last element of the list. Return 1 if it was removed, 0 else
  */
-int list_remove_first(t_list *lst)
-{
-    if (lst->size == 0)
-    {
+int list_remove_first(t_list * lst) {
+    if (lst->size == 0) {
         return (0);
     }
     list_remove_node(lst, lst->head->next);
     return (1);
 }
 
-int list_remove_last(t_list *lst)
-{
-    if (lst->size == 0)
-    {
+int list_remove_last(t_list * lst) {
+    if (lst->size == 0) {
         return (0);
     }
     list_remove_node(lst, lst->head->prev);
@@ -123,14 +111,12 @@ int list_remove_last(t_list *lst)
 /**
  *	remove list head
  */
-void *list_pop(t_list *lst)
-{
-    if (lst->size == 0)
-    {
+void * list_pop(t_list * lst) {
+    if (lst->size == 0) {
         return (NULL);
     }
 
-    void *data = lst->head->next + 1;
+    void * data = lst->head->next + 1;
     if (lst->size > 0)
     {
         list_remove_first(lst);
@@ -139,10 +125,8 @@ void *list_pop(t_list *lst)
 }
 
 /** return content at the begining of the list */
-void *list_head(t_list *lst)
-{
-    if (lst->size > 0)
-    {
+void * list_head(t_list * lst) {
+    if (lst->size > 0) {
         return ((void*)lst->head->next + 1);
     }
     return (NULL);
@@ -150,15 +134,12 @@ void *list_head(t_list *lst)
 
 
 /** remove if the comparison return elements are equals (works like strcmp) */
-int  list_remove(t_list *lst, t_cmp_function cmpf, void *cmpd)
-{
+int list_remove(t_list * lst, t_cmp_function cmpf, void * cmpd) {
     t_list_node *node;
 
     node = lst->head->next;
-    while (node != lst->head)
-    {
-        if (cmpf(node + 1, cmpd) == 0)
-        {
+    while (node != lst->head) {
+        if (cmpf(node + 1, cmpd) == 0) {
             list_remove_node(lst, node);
             return (1);
         }
@@ -171,23 +152,18 @@ int  list_remove(t_list *lst, t_cmp_function cmpf, void *cmpd)
  *  Return the list node data which match with the given comparison function
  *  and reference data. (cmpf should acts like 'strcmp()')
  */
-void *list_get(t_list *lst, t_cmp_function cmpf, void *cmpd)
-{
-    if (lst->size == 0)
-    {
+void * list_get(t_list * lst, t_cmp_function cmpf, void * cmpd) {
+    if (lst->size == 0) {
         return (NULL);
     }
 
-    if (cmpf(lst->head + 1, cmpf) == 0)
-    {
+    if (cmpf(lst->head + 1, cmpf) == 0) {
         return (lst->head);
     }
 
     t_list_node *node = lst->head->next;
-    while (node != lst->head)
-    {
-        if (cmpf(node + 1, cmpd) == 0)
-        {
+    while (node != lst->head) {
+        if (cmpf(node + 1, cmpd) == 0) {
             return (node + 1);
         }
         node = node->next;
@@ -200,16 +176,13 @@ void *list_get(t_list *lst, t_cmp_function cmpf, void *cmpd)
  * Remove the node which datas match with the given comparison function
  * and the given data reference
  */
-void list_delete(t_list *lst)
-{
-    if (lst->size == 0)
-    {
+void list_delete(t_list * lst) {
+    if (lst->size == 0) {
         goto end;
     }
 
     t_list_node *node = lst->head->next;
-    while (node != lst->head)
-    {
+    while (node != lst->head) {
         t_list_node *next = node->next;
         free(node);
         node = next;
@@ -224,8 +197,7 @@ end:
 /**
  *	clear the list : remove every nodes
  */
-void	list_clear(t_list *lst)
-{
+void list_clear(t_list * lst) {
 	list_delete(lst);
 	*lst = list_new();
 }
@@ -233,19 +205,16 @@ void	list_clear(t_list *lst)
 /**
  * Return a buffer which holds pointers to every elements of the list, allocated with 'malloc()'
  */
-void 	*list_buffer(t_list *lst)
-{
-    void **buffer = (void**)malloc(sizeof(void*) * (lst->size + 1));
-    if (buffer == NULL)
-    {
+void * list_buffer(t_list * lst) {
+    void ** buffer = (void**)malloc(sizeof(void*) * (lst->size + 1));
+    if (buffer == NULL) {
         return (NULL);
     }
 
     t_list_node *node = lst->head->next;
     unsigned int i = 0;
 
-    while (node != lst->head)
-    {
+    while (node != lst->head) {
         buffer[i] = (void*)(node + 1);
         ++i;
         node = node->next;
@@ -258,13 +227,12 @@ void 	*list_buffer(t_list *lst)
 /**
  *	iterate the function to every node content of the list
  */
-void 	list_iterate(t_list *lst, t_function f)
+void list_iterate(t_list * lst, t_function f)
 {
-	LIST_ITER_START(lst, void *, content)
-	{
+	LIST_ITER_START(lst, void * , content) {
 		f(content);
 	}
-	LIST_ITER_END(lst, void *, content)
+	LIST_ITER_END(lst, void * , content)
 }
 
 /*
@@ -282,8 +250,7 @@ int main()
     unsigned long int t;
 
     MICROSEC(t1);
-    while (i < max)
-    {
+    while (i < max) {
         list_add(&lst, strdup("a"), 2);
         ++i;
     }
@@ -302,6 +269,6 @@ int main()
 
     return (0);
 }
-*/
 
+*/
 

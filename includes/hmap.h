@@ -4,7 +4,7 @@
  *	It is under a GNU GENERAL PUBLIC LICENSE
  *
  *	This library is still in development, so please, if you find any issue, let me know about it on github.com
- *	PEREIRA Romain 1973
+ *	PEREIRA Romain
  */
 
 #ifndef HMAP_H
@@ -29,16 +29,14 @@
  *		char *helloworld = hmap_get(&map, "ima key"); //now contains "Hello world"
  */
  
-typedef struct	s_hmap_node
-{
+typedef struct	s_hmap_node {
     unsigned long int const hash; //hash of the key
-    void const *data; //the data holds
-    void const *key; //the key used	
+    void const * data; //the data holds
+    void const * key; //the key used	
 }				t_hmap_node;
 
-typedef struct	s_hmap
-{
-    t_list *values; //a buffer of boxes will holds every values (to handle collision)
+typedef struct	s_hmap {
+    t_list * values; //a buffer of value holders (to handle collision)
     unsigned long int const capacity; //number of lists
     unsigned long int size; //number of value set
     t_hash_function const hashf; //hash function
@@ -65,7 +63,7 @@ t_hmap hmap_new(unsigned long int const capacity, t_hash_function hashf, t_cmp_f
  *						'myfree' if this is structure which contains multiple allocated fields ...
  *	keyfreef : same for the node key
  */
-void hmap_delete(t_hmap *hmap);
+void hmap_delete(t_hmap * hmap);
 
 /**
  *	Insert a value into the hashmap:
@@ -77,7 +75,7 @@ void hmap_delete(t_hmap *hmap);
  *
  *	return the given data if it was inserted properly, NULL elseway
  */
-void const *hmap_insert(t_hmap *hmap, void const *data, void const *key);
+void const *hmap_insert(t_hmap * hmap, void const * data, void const * key);
 
 /**
  *	Get data from the hashmap
@@ -85,7 +83,7 @@ void const *hmap_insert(t_hmap *hmap, void const *data, void const *key);
  *	hmap : hash map
  *	key  : the node's key to find
  */
-void *hmap_get(t_hmap *hmap, void const *key);
+void *hmap_get(t_hmap *hmap, void const * key);
 
 /**
  *	Remove the data pointer from the hash map
@@ -93,7 +91,7 @@ void *hmap_get(t_hmap *hmap, void const *key);
  *	hmap : the hash map
  *	data : pointer to the data
  */
-int hmap_remove_data(t_hmap *hmap, void const *data);
+int hmap_remove_data(t_hmap * hmap, void const * data);
 
 /**
  *	Remove the data which match with the given key from the hash map
@@ -102,14 +100,14 @@ int hmap_remove_data(t_hmap *hmap, void const *data);
  *	hmap : the hash map
  *	key  : pointer to the key
  */
-int hmap_remove_key(t_hmap *hmap, void const *key);
+int hmap_remove_key(t_hmap * hmap, void const * key);
 
 /**
  *	Some simple builtin hashes functions, useful for tests.
  *
  *	String hash is based on : http://www.cse.yorku.ca/~oz/hash.html
  */
-unsigned long int strhash(char const *str);
+unsigned long int strhash(char const * str);
 unsigned long int inthash(int const value);
 
 /**
@@ -124,11 +122,9 @@ unsigned long int inthash(int const value);
  */
 # define HMAP_ITER_START(H, T, V)	{\
     unsigned long int i = 0;\
-    while (i < H->capacity)\
-    {\
-        t_list *lst = h->values + i;\
-		LIST_ITER_START(lst, t_hmap_node *, node, j)\
-        {\
+    while (i < H->capacity) {\
+        t_list * lst = h->values + i;\
+		LIST_ITER_START(lst, t_hmap_node *, node, j) {\
             T V = (T)(node->data);
 # define HMAP_ITER_END(H, T, V)					}\
         LIST_ITER_END(lst, t_hmap_node *, node, j)\

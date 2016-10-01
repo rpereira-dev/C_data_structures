@@ -18,19 +18,17 @@
  */
 t_hmap hmap_new(unsigned long int const capacity,
         t_hash_function hashf, t_cmp_function keycmpf,
-        t_function keyfreef, t_function datafreef)
-{
+        t_function keyfreef, t_function datafreef) {
+
     // set the hmap capacity to the closest power of two
     unsigned long int c = 1;
-    while (c < capacity)
-    {
+    while (c < capacity) {
         c = c << 1;
     }
 
     unsigned long int size = sizeof(t_list) * c;
-    void *values = malloc(size);
-    if (values == NULL)
-    {
+    void * values = malloc(size);
+    if (values == NULL) {
         t_hmap map = {0, 0, 0, 0, 0, 0, 0};
         return (map);
     }
@@ -49,23 +47,18 @@ t_hmap hmap_new(unsigned long int const capacity,
  i.e :	'NULL' if data shouldnt be free, 'free' if the data was allocated with a malloc,
  'myfree' if this is structure which contains multiple allocated fields
  */
-void hmap_delete(t_hmap *hmap)
-{
+void hmap_delete(t_hmap * hmap) {
     unsigned long int i = 0;
-    while (i < hmap->capacity)
-    {
-        t_list *lst = hmap->values + i;
-        if (lst->head) //if the list has been initialized
-        {
-            LIST_ITER_START(lst, t_hmap_node *, node)
-            {
-                if (hmap->datafreef)
-                {
+    while (i < hmap->capacity) {
+        t_list * lst = hmap->values + i;
+        //if the list has been initialized
+        if (lst->head) {
+            LIST_ITER_START(lst, t_hmap_node *, node) {
+                if (hmap->datafreef) {
                     hmap->datafreef(node->data);
                 }
 
-                if (hmap->keyfreef)
-                {
+                if (hmap->keyfreef) {
                     hmap->keyfreef(node->key);
                 }				
             }
@@ -86,7 +79,7 @@ void hmap_delete(t_hmap *hmap)
  *
  *	return the given data if it was inserted properly, NULL elseway
  */
-void const *hmap_insert(t_hmap *hmap, void const *data, void const *key)
+void const * hmap_insert(t_hmap * hmap, void const * data, void const * key)
 {
     unsigned long int hash = hmap->hashf(key); //get the hash for this key
     unsigned long int addr = hash & (hmap->capacity - 1); //get the array list from the hash
@@ -94,8 +87,8 @@ void const *hmap_insert(t_hmap *hmap, void const *data, void const *key)
     t_hmap_node node = {hash, data, key}; //set the node buffer
 
     t_list *lst = hmap->values + addr; //get the list from it address
-    if (lst->head == NULL) //if the list hasnt already been initialized
-    {
+    //if the list hasnt already been initialized
+    if (lst->head == NULL) {
         *lst = list_new(); //initialize it				
     }
     list_add(lst, &node, sizeof(t_hmap_node)); //add the node to the list
@@ -110,24 +103,20 @@ void const *hmap_insert(t_hmap *hmap, void const *data, void const *key)
  *	hmap : hash map
  *	key  : the node's key to find
  */
-void *hmap_get(t_hmap *hmap, void const *key)
-{
+void * hmap_get(t_hmap * hmap, void const * key) {
     unsigned long int hash = hmap->hashf(key); //get the hash for this key
     unsigned long int addr = hash & (hmap->capacity - 1); //get the lst list from the hash
 
-    t_list *lst = hmap->values + addr; //list of collision for this key hash
+    t_list * lst = hmap->values + addr; //list of collision for this key hash
 
-    if (lst->size == 0)
-    {
+    if (lst->size == 0) {
         return (NULL);
     }
 
-    LIST_ITER_START(lst, t_hmap_node *, node) //so compare the exact key to find the wanted data
-    {
-        printf("Comparing %s and %s\n", (char*)key, (char*)node->key);
-        if (hmap->keycmpf(key, node->key) == 0)
-        {
-            return ((void*)node->data);
+    //so compare the exact key to find the wanted data
+    LIST_ITER_START(lst, t_hmap_node *, node) {
+        if (hmap->keycmpf(key, node->key) == 0) {
+            return ((void *)node->data);
         }
     }
     LIST_ITER_END(lst, t_hmap_node *, node)
@@ -140,26 +129,21 @@ void *hmap_get(t_hmap *hmap, void const *key)
  *	hmap : the hash map
  *	data : pointer to the data
  */
-int hmap_remove_data(t_hmap *hmap, void const *data)
-{
+int hmap_remove_data(t_hmap * hmap, void const * data) {
     unsigned long int i = 0;
-    while (i < hmap->capacity)
-    {
-        t_list *lst = hmap->values + i;
-        LIST_ITER_START(lst, t_hmap_node *, node)
-        {
-            if (node->data == data)
-            {
-                list_remove_node(lst, __node); //__node is the current LIST_ITER_START node of the linked list
+    while (i < hmap->capacity) {
+        t_list * lst = hmap->values + i;
+        LIST_ITER_START(lst, t_hmap_node *, node) {
+            if (node->data == data) {
+                //__node is the current LIST_ITER_START node of the linked list
+                list_remove_node(lst, __node);
                 hmap->size--;
 
-                if (hmap->datafreef)
-                {
+                if (hmap->datafreef) {
                     hmap->datafreef(node->key);
                 }
 
-                if (hmap->keyfreef)
-                {
+                if (hmap->keyfreef) {
                     hmap->keyfreef(node->key);
                 }
 
@@ -180,32 +164,28 @@ int hmap_remove_data(t_hmap *hmap, void const *data)
  *	hmap : the hash map
  *	key  : pointer to the key
  */
-int hmap_remove_key(t_hmap *hmap, void const *key)
-{
+int hmap_remove_key(t_hmap * hmap, void const * key) {
     unsigned long int hash = hmap->hashf(key); //get the hash for this key
     unsigned long int addr = hash & (hmap->capacity - 1); //get the array list from the hash
 
-    t_list *lst = hmap->values + addr; //lst of collision for this key hash
+    t_list * lst = hmap->values + addr; //lst of collision for this key hash
 
-    if (lst->size == 0)
-    {
+    if (lst->size == 0) {
         return (0);
     }
 
-    LIST_ITER_START(lst, t_hmap_node *, node) //so compare the exact key to find the wanted data
-    {
-        if (hmap->keycmpf(key, node->key) == 0)
-        {
-			list_remove_node(lst, __node); //__node is the current LIST_ITER_START node of the linked list
+    //so compare the exact key to find the wanted data
+    LIST_ITER_START(lst, t_hmap_node *, node) {
+        if (hmap->keycmpf(key, node->key) == 0) {
+            //__node is the current LIST_ITER_START node of the linked list
+			list_remove_node(lst, __node);
 			hmap->size--;
 
-            if (hmap->datafreef)
-            {
+            if (hmap->datafreef) {
                 hmap->datafreef(node->key);
             }
 
-            if (hmap->keyfreef)
-            {
+            if (hmap->keyfreef) {
                 hmap->keyfreef(node->key);
             }
 
@@ -221,17 +201,14 @@ int hmap_remove_key(t_hmap *hmap, void const *key)
 /**
  *	default string hash function
  */
-unsigned long int strhash(char const *str)
-{
-    if (str == NULL)
-    {
+unsigned long int strhash(char const * str) {
+    if (str == NULL) {
         return (0);
     }
 
     unsigned long int hash = 5381;
     int c;
-    while ((c = *str) != '\0')
-    {
+    while ((c = *str) != '\0') {
         hash = ((hash << 5) + hash) + c;
         str++;
     }
@@ -241,14 +218,12 @@ unsigned long int strhash(char const *str)
 /**
  *	Default hash for an integer
  */
-unsigned long int inthash(int const value)
-{
+unsigned long int inthash(int const value) {
     return (value);
 }
 
-/**
-int main()
-{
+/*
+int main() {
     t_hmap hmap = hmap_new(1024, (t_hf)strhash, (t_cmpf)strcmp, free, free);
     hmap_insert(&hmap, strdup("Hello world"), strdup("ima key"));
 
@@ -258,4 +233,5 @@ int main()
 
     hmap_delete(&hmap);
     return (0);
-}*/
+}
+*/
