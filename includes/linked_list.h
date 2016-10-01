@@ -25,6 +25,9 @@ typedef struct  s_list {
     unsigned long int   size;
 }               t_list;
 
+/** initialize the given list */
+int list_init(t_list * list);
+
 /**
  * Create a new linked list
  */

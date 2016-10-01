@@ -102,7 +102,7 @@ void const * hmap_insert(t_hmap * hmap, void const * data, void const * key)
     t_list *lst = hmap->values + addr; //get the list from it address
     //if the list hasnt already been initialized
     if (lst->head == NULL) {
-        *lst = list_new(); //initialize it				
+        list_init(lst); //initialize it				
     }
     list_add(lst, &node, sizeof(t_hmap_node)); //add the node to the list
 

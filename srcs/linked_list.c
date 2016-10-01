@@ -9,7 +9,7 @@
 
 #include "linked_list.h"
 
-static int list_init(t_list * list) {
+int list_init(t_list * list) {
     list->head = (t_list_node*)malloc(sizeof(t_list_node));
     if (list->head == NULL) {
         return (0);
