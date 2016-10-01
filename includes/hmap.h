@@ -114,20 +114,21 @@ unsigned long int inthash(int const value);
  *	Macro to iterate fastly though to hash map
  *
  *	i.e:
- *		HMAP_ITER_START(hmap, char *, str)
- *		{
+ *		HMAP_ITER_START(hmap, char *, str) {
  *			puts(str);
  *		}
  *		HMAP_ITER_END(hmap, char *, str)
  */
-# define HMAP_ITER_START(H, T, V)	{\
+# define HMAP_ITER_START(H, T, V)\
+{\
     unsigned long int i = 0;\
-    while (i < H->capacity) {\
-        t_list * lst = h->values + i;\
-		LIST_ITER_START(lst, t_hmap_node *, node, j) {\
+    while (i < (H)->capacity) {\
+        t_list * lst = (H)->values + i;\
+		LIST_ITER_START(lst, t_hmap_node *, node) {\
             T V = (T)(node->data);
-# define HMAP_ITER_END(H, T, V)					}\
-        LIST_ITER_END(lst, t_hmap_node *, node, j)\
+# define HMAP_ITER_END(H, T, V)\
+        }\
+        LIST_ITER_END(lst, t_hmap_node *, node)\
         ++i;\
     }\
 }

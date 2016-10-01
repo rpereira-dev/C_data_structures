@@ -75,7 +75,8 @@ void btree_apply_suffix(t_btree * btree, t_function iterf);
  *	Iterate on the binary tree. Item are set in insertion order (not in sorted order)
  */
 
-# define BTREE_ITER_START(B, T, V)	{\
+# define BTREE_ITER_START(B, T, V)\
+{\
     ARRAY_LIST_ITER_START(&((B)->values), T, V, __btree_iterator) {
 # define BTREE_ITER_END(B, T, V)		}\
     ARRAY_LIST_ITER_END(&((B)->values), T, V, __btree_iterator)\

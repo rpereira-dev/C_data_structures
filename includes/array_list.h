@@ -97,7 +97,8 @@ void * array_list_get(t_array_list * array, unsigned int idx);
  *          }
  *          ARRAY_LIST_ITER_END(array, char *, str, i);
  */
-# define ARRAY_LIST_ITER_START(L, T, X, I)  {\
+# define ARRAY_LIST_ITER_START(L, T, X, I)\
+ {\
     unsigned long int I = 0;\
     while (I < (L)->size) {\
         T X = ((T)(L)->data) + I;

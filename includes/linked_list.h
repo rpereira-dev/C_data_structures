@@ -96,20 +96,17 @@ void * list_buffer(t_list * lst);
 
 
 /** iterate on the list using a macro (optimized) */
-#define LIST_ITER_START(L, T, V) \
+# define LIST_ITER_START(L, T, V)\
 {\
-    t_list_node *__node = L->head->next;\
-    while (__node != L->head) {\
-        T V = (T)(__node + 1);
-#define LIST_ITER_END(L, T, V) \
-        __node = __node->next; \
+	if (L != NULL && L->head != NULL) {\
+    	t_list_node *__node = L->head->next;\
+    	while (__node != L->head) {\
+        	T V = (T)(__node + 1);
+# define LIST_ITER_END(L, T, V) \
+        	__node = __node->next; \
+    	}\
     }\
 }
-
-#endif
-
-
-
 
 
 
@@ -125,3 +122,7 @@ int     list_to_fd(t_list *list, int fd);
  *  read and return a list from the given file descriptor
  */
 t_list  list_from_fd(int fd);
+
+
+
+#endif

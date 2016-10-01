@@ -222,16 +222,24 @@ unsigned long int inthash(int const value) {
     return (value);
 }
 
-/*
 int main() {
     t_hmap hmap = hmap_new(1024, (t_hf)strhash, (t_cmpf)strcmp, free, free);
     hmap_insert(&hmap, strdup("Hello world"), strdup("ima key"));
+    hmap_insert(&hmap, strdup("abc"), strdup("ima key2"));
+    hmap_insert(&hmap, strdup("def"), strdup("ima key3"));
+    hmap_insert(&hmap, strdup("collision1"), strdup("ima key collision"));
+    hmap_insert(&hmap, strdup("collision2"), strdup("ima key collision"));
 
-    char *str = hmap_get(&hmap, "ima key");
+    char *value = hmap_get(&hmap, "ima key");
 
-    printf("{%s}\n", str);
+    printf("{%s}\n", value);
+    printf("other values are:\n");
+
+    HMAP_ITER_START(&hmap, char *, str) {
+        printf("{%s}\n", str);
+    }
+    HMAP_ITER_END(&hmap, char *, str)
 
     hmap_delete(&hmap);
     return (0);
 }
-*/
