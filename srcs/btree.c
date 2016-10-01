@@ -12,13 +12,16 @@
 /**
  *  create a new binary tree
  */
-t_btree btree_new(t_cmp_function cmpf) {
-    t_btree btree;
+t_btree * btree_new(t_cmp_function cmpf) {
+    t_btree * btree = (t_btree *)malloc(sizeof(t_btree));
+    if (btree == NULL) {
+        return (NULL);
+    }
 
-    btree.head = NULL;
-    btree.size = 0;
-    btree.cmpf = cmpf;
-    btree.values = array_list_new(16, sizeof(void*));
+    btree->head = NULL;
+    btree->size = 0;
+    btree->cmpf = cmpf;
+    btree->values = array_list_new(16, sizeof(void *));
     return (btree);
 }
 
@@ -104,7 +107,7 @@ static int _btree_insert(t_cmp_function cmpf, t_btree_node ** parent, t_btree_no
  */
 void * btree_insert(t_btree * tree, void * value) {
     if (_btree_insert(tree->cmpf, NULL, &(tree->head), value)) {
-        array_list_add(&(tree->values), &(value));
+        array_list_add(tree->values, &(value));
         tree->size++;
         return (value);
     }
@@ -127,7 +130,7 @@ static void _btree_delete_node(t_btree_node ** node) {
  */
 void btree_delete(t_btree * btree) {
     _btree_delete_node(&(btree->head));
-    array_list_delete(&(btree->values));
+    array_list_delete(btree->values);
     btree->size = 0;
     btree->cmpf = 0;
 }
@@ -262,18 +265,19 @@ void * btree_remove(t_btree * tree, void * valueref) {
     return (btree_remove_if(tree, valueref, tree->cmpf));
 }
 
-/*
-int main() {
-	t_btree btree = btree_new((t_cmpf)strcmp);
-	
-	btree_insert(&btree, strdup("8")); 
-	btree_insert(&btree, strdup("E")); 
 
-	BTREE_ITER_START(&btree, char *, str) {
+int main() {
+	t_btree * btree = btree_new((t_cmpf)strcmp);
+	
+	btree_insert(btree, strdup("8")); 
+	btree_insert(btree, strdup("E")); 
+
+	BTREE_ITER_START(btree, char *, str) {
 		printf("%s\n", str);
 	}
 	BTREE_ITER_END(&btree, char *, str)
 
+    btree_delete(btree);
+
 	return (0);
 }
-*/

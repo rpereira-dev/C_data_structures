@@ -20,7 +20,7 @@ typedef struct  s_btree_node {
 }               t_btree_node;
 
 typedef struct  s_btree {
-    t_array_list        values;
+    t_array_list        * values;
     t_btree_node        * head;
     t_cmp_function      cmpf;
     unsigned long int   size;
@@ -29,7 +29,7 @@ typedef struct  s_btree {
 /**
  *  create a new binary tree
  */
-t_btree btree_new(t_cmp_function cmpf);
+t_btree * btree_new(t_cmp_function cmpf);
 
 /**
  *  delete the btree from the heap
@@ -77,9 +77,9 @@ void btree_apply_suffix(t_btree * btree, t_function iterf);
 
 # define BTREE_ITER_START(B, T, V)\
 {\
-    ARRAY_LIST_ITER_START(&((B)->values), T, V, __btree_iterator) {
+    ARRAY_LIST_ITER_START((B)->values, T, V, __btree_iterator) {
 # define BTREE_ITER_END(B, T, V)		}\
-    ARRAY_LIST_ITER_END(&((B)->values), T, V, __btree_iterator)\
+    ARRAY_LIST_ITER_END((B)->values, T, V, __btree_iterator)\
 }
 
 #endif

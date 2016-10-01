@@ -16,41 +16,41 @@
 # include "common.h"
 
 typedef struct  s_list_node {
-    struct s_list_node *next;
-    struct s_list_node *prev;
+    struct s_list_node * next;
+    struct s_list_node * prev;
 }               t_list_node;
 
 typedef struct  s_list {
-    t_list_node *head;
-    unsigned long int size;
+    t_list_node         * head;
+    unsigned long int   size;
 }               t_list;
 
 /**
  * Create a new linked list
  */
-t_list list_new(void);
+t_list * list_new(void);
 
 /**
  *  Add an element at the end of the list
  */
-void * list_add(t_list * lst, void const *content, unsigned int content_size);
+void * list_add(t_list * lst, void const * content, unsigned int content_size);
 
 /**
  * Add an element in head of the list
  */
-void * list_addfront(t_list * lst, void const *content, unsigned int content_size);
+void * list_addfront(t_list * lst, void const * content, unsigned int content_size);
 
 /**
  *  Return the list node data which match with the given comparison function
  *  and reference data. (cmpf should acts like 'strcmp()')
  */
-void * list_get(t_list * lst, t_cmp_function cmpf, void *cmpd);
+void * list_get(t_list * lst, t_cmp_function cmpf, void * cmpd);
 
 /**
  * Remove the node which datas match with the given comparison function
  * and the given data reference
  */
-int list_remove(t_list * lst, t_cmp_function cmpf, void *cmpref);
+int list_remove(t_list * lst, t_cmp_function cmpf, void * cmpref);
 
 /**
  *	remove the given node from the list

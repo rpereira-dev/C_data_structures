@@ -9,19 +9,31 @@
 
 #include "linked_list.h"
 
+static int list_init(t_list * list) {
+    list->head = (t_list_node*)malloc(sizeof(t_list_node));
+    if (list->head == NULL) {
+        return (0);
+    }
+    list->head->next = list->head;
+    list->head->prev = list->head;
+    list->size = 0;
+    return (1);
+}
+
 /**
  * Create a new linked list
  */
-t_list list_new(void) {
-    t_list  list;
-
-    list.head = (t_list_node*)malloc(sizeof(t_list_node));
-    if (list.head == NULL) {
-        return (list);
+t_list * list_new(void) {
+    t_list * list = (t_list *) malloc(sizeof(t_list));
+    if (list == NULL) {
+        return (NULL);
     }
-    list.head->next = list.head;
-    list.head->prev = list.head;
-    list.size = 0;
+    
+    if (!list_init(list)) {
+        free(list);
+        return (NULL);
+    }
+
     return (list);
 }
 
@@ -181,13 +193,7 @@ void list_delete(t_list * lst) {
         goto end;
     }
 
-    t_list_node *node = lst->head->next;
-    while (node != lst->head) {
-        t_list_node *next = node->next;
-        free(node);
-        node = next;
-    }
-    free(lst->head);
+    list_clear(lst);
 
 end:
     lst->head = NULL;
@@ -198,8 +204,16 @@ end:
  *	clear the list : remove every nodes
  */
 void list_clear(t_list * lst) {
-	list_delete(lst);
-	*lst = list_new();
+
+    t_list_node * node = lst->head->next;
+    while (node != lst->head) {
+        t_list_node *next = node->next;
+        free(node);
+        node = next;
+    }
+
+    free(lst->head);
+    list_init(lst);
 }
 
 /**
@@ -235,12 +249,12 @@ void list_iterate(t_list * lst, t_function f)
 	LIST_ITER_END(lst, void * , content)
 }
 
-/*
+
 int main()
 {
     puts("\tLINKED LIST TESTS STARTED");
 
-    t_list lst = list_new();
+    t_list * lst = list_new();
 
     unsigned long int i = 0;
     unsigned long int max = 10000000;
@@ -251,24 +265,23 @@ int main()
 
     MICROSEC(t1);
     while (i < max) {
-        list_add(&lst, strdup("a"), 2);
+        list_add(lst, strdup("a"), 2);
         ++i;
     }
     MICROSEC(t2);
     t = t2 - t1;
 
     printf("\t%-30s%lu\n", "elements pushed : ", max);
-    printf("\t%-30s%lu\n", "list number of elements : ", lst.size);
+    printf("\t%-30s%lu\n", "list number of elements : ", lst->size);
     printf("\t%-30s%lf s\n", "time taken: ", t / 1000000.0f);
 
 
-	list_iterate(&lst, free);
-	list_delete(&lst);
+	list_iterate(lst, free);
+	list_delete(lst);
 
     puts("\tLINKED LIST TESTS PASSED");
 
     return (0);
 }
 
-*/
 

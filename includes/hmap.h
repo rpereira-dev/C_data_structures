@@ -37,12 +37,12 @@ typedef struct  s_hmap_node {
 
 typedef struct  s_hmap {
     t_list * values; //a buffer of value holders (to handle collision)
-    unsigned long int const capacity; //number of lists
+    unsigned long int capacity; //number of lists
     unsigned long int size; //number of value set
-    t_hash_function const hashf; //hash function
-    t_cmp_function const keycmpf; //key comparison function, where node keys are sent as parameters
-    t_function const datafreef; //function call when a data object should be freed
-    t_function const keyfreef; //function called when a key should be freed
+    t_hash_function hashf; //hash function
+    t_cmp_function keycmpf; //key comparison function, where node keys are sent as parameters
+    t_function datafreef; //function call when a data object should be freed
+    t_function keyfreef; //function called when a key should be freed
 }               t_hmap;
 
 /**
@@ -52,7 +52,7 @@ typedef struct  s_hmap {
  *  hashf    : hash function to use on inserted elements
  *  cmpf     : comparison function to use when searching a data
  */
-t_hmap hmap_new(unsigned long int const capacity, t_hash_function hashf, t_cmp_function keycmpf, t_function keyfreef, t_function datafreef);
+t_hmap * hmap_new(unsigned long int const capacity, t_hash_function hashf, t_cmp_function keycmpf, t_function keyfreef, t_function datafreef);
 
 /**
  *  Delete the hashmap from the heap

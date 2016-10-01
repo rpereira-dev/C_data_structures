@@ -30,7 +30,7 @@ typedef struct  s_array_list {
  *
  * e.g: t_array_list array = array_list_new(16, sizeof(int));
  */
-t_array_list array_list_new(unsigned long int nb, unsigned int elem_size);
+t_array_list * array_list_new(unsigned long int nb, unsigned int elem_size);
 
 /**
  *  Add an element at the end of the list

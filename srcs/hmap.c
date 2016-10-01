@@ -16,7 +16,7 @@
  *	hashf    : hash function to use on inserted elements
  *	keycmpf  : comparison function to use when searching a data
  */
-t_hmap hmap_new(unsigned long int const capacity,
+t_hmap * hmap_new(unsigned long int const capacity,
         t_hash_function hashf, t_cmp_function keycmpf,
         t_function keyfreef, t_function datafreef) {
 
@@ -29,12 +29,23 @@ t_hmap hmap_new(unsigned long int const capacity,
     unsigned long int size = sizeof(t_list) * c;
     void * values = malloc(size);
     if (values == NULL) {
-        t_hmap map = {0, 0, 0, 0, 0, 0, 0};
-        return (map);
+        return (NULL);
     }
     memset(values, 0, size);
 
-    t_hmap hmap = {values, c, 0, hashf, keycmpf, datafreef, keyfreef};
+    t_hmap * hmap = (t_hmap *)malloc(sizeof(t_hmap));
+    if (hmap != NULL) {
+        free(values);
+        return (NULL);
+    }
+
+    hmap->values = values;
+    hmap->capacity = capacity;
+    hmap->size = 0;
+    hmap->hashf = hashf;
+    hmap->keycmpf = keycmpf;
+    hmap->datafreef = datafreef;
+    hmap->keyfreef = keyfreef;
 
     return (hmap);
 }
@@ -67,6 +78,8 @@ void hmap_delete(t_hmap * hmap) {
         }
         ++i;
     }
+
+    free(hmap);
 }
 
 /**

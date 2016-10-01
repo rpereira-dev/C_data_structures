@@ -16,14 +16,17 @@
  *
  * e.g: t_array_list array = array_list_new(16, sizeof(int));
  */
-t_array_list array_list_new(unsigned long int nb, unsigned int elem_size) {
-    t_array_list array;
-
-    array.data = calloc(nb, elem_size);
-    array.capacity = nb;
-    array.elem_size = elem_size;
-    array.size = 0;
-    array.default_capacity = nb;
+t_array_list * array_list_new(unsigned long int nb, unsigned int elem_size) {
+    t_array_list * array = (t_array_list *)malloc(sizeof(t_array_list));
+    if (array == NULL) {
+        return (NULL);
+    }
+    
+    array->data = calloc(nb, elem_size);
+    array->capacity = nb;
+    array->elem_size = elem_size;
+    array->size = 0;
+    array->default_capacity = nb;
     return (array);
 }
 
@@ -115,9 +118,7 @@ void array_list_clear(t_array_list * array) {
  */
 void array_list_delete(t_array_list * array) {
     free(array->data);
-    array->data = NULL;
-    array->size = 0;
-    array->capacity = 0;
+    free(array);
 }
 
 /**
@@ -146,12 +147,11 @@ void * array_list_raw(t_array_list * array) {
 
 
 //TESTS
-/*
 
 int main()
 {
     puts("\tARRAY LIST TESTS STARTED");
-    t_array_list array = array_list_new(16, sizeof(char));
+    t_array_list * array = array_list_new(16, sizeof(char));
 
     unsigned long int i = 0;
     unsigned long int max = 10000000;
@@ -161,28 +161,28 @@ int main()
 
     MICROSEC(t1);
     while (i < max) {
-        array_list_add(&array, "a");
+        array_list_add(array, "a");
         ++i;
     }
     MICROSEC(t2);
     t = t2 - t1;
 
     printf("\t\t%-30s%lu\n", "elements added : ", max);
-    printf("\t\t%-30s%lu\n", "array number of elements : ", array.size);
-    printf("\t\t%-30s%lu\n", "array capacity now : ", array.capacity);
+    printf("\t\t%-30s%lu\n", "array number of elements : ", array->size);
+    printf("\t\t%-30s%lu\n", "array capacity now : ", array->capacity);
     printf("\t\t%-30s%lf s\n", "time taken: ", t / 1000000.0f);
 
     {
         printf("\n\tIterating on array...\n");
         MICROSEC(t1);
-        ARRAY_LIST_ITER_START(&array, char *, item, iterator) {
+        ARRAY_LIST_ITER_START(array, char *, item, iterator) {
             char c = *item;
             if (c != 'a') {
                 fprintf(stderr, "ARRAY LIST ITER ERROR!!!!!");
             }
             (void)c;
         }
-        ARRAY_LIST_ITER_END(&array, char *, item, iterator);
+        ARRAY_LIST_ITER_END(array, char *, item, iterator);
         MICROSEC(t2);
         t = t2 - t1;
         printf("\t\t%-30s%lf s\n", "time taken: ", t / 1000000.0f);
@@ -193,7 +193,7 @@ int main()
         printf("\n\tRemoving %lu last elements ...\n", toremove);
         MICROSEC(t1);
         while (toremove) {
-            array_list_remove(&array, array.size - 1);
+            array_list_remove(array, array->size - 1);
             --toremove;
         }
         MICROSEC(t2);
@@ -206,7 +206,7 @@ int main()
         printf("\n\tRemoving %lu first elements ...\n", toremove);
         MICROSEC(t1);
         while (toremove) {
-            array_list_remove(&array, 0);
+            array_list_remove(array, 0);
             --toremove;
         }
         MICROSEC(t2);
@@ -222,7 +222,7 @@ int main()
         printf("\n\tRemoving %lu middle elements ...\n", toremove);
         MICROSEC(t1);
         while (toremove) {
-            array_list_remove(&array, middle + toremove);
+            array_list_remove(array, middle + toremove);
             --toremove;
         }
         MICROSEC(t2);
@@ -233,15 +233,14 @@ int main()
     {
         printf("\n\tDeleting array...\n");
         MICROSEC(t1);
-        array_list_delete(&array);
+        array_list_delete(array);
         MICROSEC(t2);
         t = t2 - t1;
-        printf("\t\t%-30s%lu\n", "array number of elements : ", array.size);
-        printf("\t\t%-30s%lu\n", "array capacity now : ", array.capacity);
+        printf("\t\t%-30s%lu\n", "array number of elements : ", array->size);
+        printf("\t\t%-30s%lu\n", "array capacity now : ", array->capacity);
         printf("\t\t%-30s%lf s\n", "time taken: ", t / 1000000.0f);
     }
 
     puts("\tARRAY LIST TESTS PASSED");
     return (1);
 }
-*/
