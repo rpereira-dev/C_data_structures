@@ -75,7 +75,7 @@ void hmap_delete(t_hmap * hmap);
  *
  *  return the given data if it was inserted properly, NULL elseway
  */
-void const *hmap_insert(t_hmap * hmap, void const * data, void const * key);
+void const * hmap_insert(t_hmap * hmap, void const * data, void const * key);
 
 /**
  *  Get data from the hashmap
@@ -83,7 +83,7 @@ void const *hmap_insert(t_hmap * hmap, void const * data, void const * key);
  *  hmap : hash map
  *  key  : the node's key to find
  */
-void *hmap_get(t_hmap *hmap, void const * key);
+void * hmap_get(t_hmap * hmap, void const * key);
 
 /**
  *  Remove the data pointer from the hash map

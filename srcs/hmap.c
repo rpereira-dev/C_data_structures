@@ -34,7 +34,7 @@ t_hmap * hmap_new(unsigned long int const capacity,
     memset(values, 0, size);
 
     t_hmap * hmap = (t_hmap *)malloc(sizeof(t_hmap));
-    if (hmap != NULL) {
+    if (hmap == NULL) {
         free(values);
         return (NULL);
     }
@@ -78,8 +78,6 @@ void hmap_delete(t_hmap * hmap) {
         }
         ++i;
     }
-
-    free(hmap);
 }
 
 /**
@@ -99,7 +97,7 @@ void const * hmap_insert(t_hmap * hmap, void const * data, void const * key)
 
     t_hmap_node node = {hash, data, key}; //set the node buffer
 
-    t_list *lst = hmap->values + addr; //get the list from it address
+    t_list * lst = hmap->values + addr; //get the list from it address
     //if the list hasnt already been initialized
     if (lst->head == NULL) {
         list_init(lst); //initialize it				

@@ -118,7 +118,6 @@ void array_list_clear(t_array_list * array) {
  */
 void array_list_delete(t_array_list * array) {
     free(array->data);
-    free(array);
 }
 
 /**
