@@ -158,7 +158,6 @@ int hmap_remove_data(t_hmap * hmap, void const * data) {
                     hmap->keyfreef(node->key);
                 }
 
-                free(node);
                 return (1);
             }
         }
