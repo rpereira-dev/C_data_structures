@@ -111,9 +111,6 @@ void * list_buffer(t_list * lst);
     }\
 }
 
-
-
-
 //ABOVE FUNCTIONS ARENT IMPLEMENTED YET:
 
 /**
@@ -125,7 +122,5 @@ int     list_to_fd(t_list *list, int fd);
  *  read and return a list from the given file descriptor
  */
 t_list  list_from_fd(int fd);
-
-
 
 #endif
