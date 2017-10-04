@@ -4,7 +4,8 @@ SRCS = $(wildcard ./srcs/*.c)
 
 OBJ	= $(SRCS:.c=.o)
 INC	= -I ./includes
-FLAGS	= -Wall -Werror -Wextra -Ofast
+#FLAGS	= -Wall -Werror -Wextra -Ofast
+FLAGS	= -Wall -Werror -Wextra -g
 
 all: $(NAME)
 
