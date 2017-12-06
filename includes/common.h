@@ -16,6 +16,10 @@
 # include <string.h>
 # include <stdio.h>
 
+# ifndef BYTE
+# 	define BYTE unsigned char
+# endif
+
 typedef void (*t_function)();
 typedef int	(*t_cmp_function) (void const * a, void const * b);
 typedef unsigned long int (*t_hash_function) (void const * v);
