@@ -125,6 +125,48 @@ void image_set_a(t_image * image, size_t x, size_t y, BYTE value) {
 	*(image_component(image, x, y, IMAGE_COMPONENT_A)) = value;
 }
 
+/**
+ * square blur effect
+ *	'src':
+ *	'dst': can be NULL
+ *	'depth': square of 2 * depth + 1 size
+ *
+ */
+t_image * image_blur(t_image * image, t_image * dst, size_t depth) {
+	if (dst == NULL) {
+		dst = image_new(image->width, image->height, image->format);
+	} else if (dst->width != image->width || dst->height != image->height) {
+		return (NULL);
+	}
+	BYTE allocated = 0;
+	if (image == dst) {
+		dst = image_new(image->width, image->height, image->format);
+		allocated = 1;
+	}
+
+	size_t x, y, dx, dy;
+	size_t total = (2 * depth + 1) * (2 * depth + 1);
+	for (y = 0 ; y < image->height ; y++) {
+		for (x = 0 ; x < image->width ; x++) {
+			unsigned short sum = 0;
+			for (dx = -depth ; dx <= depth ; dx++) {
+				for (dy = -depth ; dy <= depth ; dy++) {
+					//TODO : depending on format
+				}
+			}
+			BYTE value = (BYTE) (sum / total);
+			(void)value;
+			//TODO : set pixel
+		}
+	}
+
+	if (allocated) {
+		image_delete(dst);
+		return (image);
+	}
+	return (dst);
+}
+
 int main() {
 	t_image * img = image_new(2, 2, IMAGE_RGBA);
 	image_set_r(img, 0, 0, 255);
