@@ -22,6 +22,7 @@
 	if dealing with small bitmaps, use 'BYTE'
 */
 # ifndef BITMAP_UNIT
+//# 	define BITMAP_UNIT BYTE
 # 	define BITMAP_UNIT size_t
 # endif
 # define BITS_PER_UNIT (sizeof(BITMAP_UNIT) * 8)
@@ -37,9 +38,9 @@ typedef struct	s_bitmap {
  * e.g: t_bitmap = image_new2(16, 16);
  * e.g: t_bitmap = image_new3(16, 16, 16);
  */
-t_bitmap * bitmap_new(size_t width);
-t_bitmap * bitmap_new2(size_t width, size_t height);
-t_bitmap * bitmap_new3(size_t width, size_t height, size_t depth);
+t_bitmap * bitmap_new(size_t sizeX);
+t_bitmap * bitmap_new2(size_t sizeX, size_t sizeY);
+t_bitmap * bitmap_new3(size_t sizeX, size_t sizeY, size_t sizeZ);
 
 /**
  * get a copy of the bitmap, should be de-allocated using 'bitmap_delete()'
@@ -95,9 +96,13 @@ t_bitmap * bitmap_not(t_bitmap * a, t_bitmap * dst);
 
 /** write the bitmap on the given flux */
 void bitmap_printf(t_bitmap * bitmap, FILE * fd);
+void bitmap_printf2(t_bitmap * bitmap, FILE * fd, size_t sizeX);
+void bitmap_printf3(t_bitmap * bitmap, FILE * fd, size_t sizeX, size_t sizeZ);
 
 /** write the bitmap on the given file description with a buffer size of size 'bufsize' */
 void bitmap_write(t_bitmap * bitmap, int fd, size_t bufsize);
+void bitmap_write2(t_bitmap * bitmap, int fd, size_t bufsize, size_t sizeX);
+void bitmap_write3(t_bitmap * bitmap, int fd, size_t bufsize, size_t sizeX, size_t sizeY);
 
 # define BITMAP_ITER_START(B, V, I, J)\
 	BITMAP_UNIT * __bits = (BITMAP_UNIT *) (B + 1);\
@@ -105,7 +110,7 @@ void bitmap_write(t_bitmap * bitmap, int fd, size_t bufsize);
 	for (I = 0 ; I < B->size ; I++) {\
 		size_t J;\
 		for (J = 0 ; J < BITS_PER_UNIT ; J++) {\
-			BIT V = __bits[I] & (1 << J);
+			BIT V = (__bits[I] & ((BITMAP_UNIT)1 << J)) ? (BIT)1 : (BIT)0;
 # define BITMAP_ITER_END(B, V, I, J)\
 		}\
 	}

@@ -16,8 +16,8 @@
  * e.g: t_bitmap = image_new2(16, 16);
  * e.g: t_bitmap = image_new3(16, 16, 16);
  */
-t_bitmap * bitmap_new(size_t width) {
-	size_t size = width / BITS_PER_UNIT + (width % BITS_PER_UNIT != 0);
+t_bitmap * bitmap_new(size_t sizeX) {
+	size_t size = sizeX / BITS_PER_UNIT + (sizeX % BITS_PER_UNIT != 0);
 	t_bitmap * bitmap = (t_bitmap *)malloc(sizeof(t_bitmap) + size);
 	if (bitmap == NULL) {
 		return (NULL);
@@ -27,12 +27,12 @@ t_bitmap * bitmap_new(size_t width) {
 	return (bitmap);
 }
 
-t_bitmap * bitmap_new2(size_t width, size_t height) {
-	return (bitmap_new(width * height));
+t_bitmap * bitmap_new2(size_t sizeX, size_t sizeY) {
+	return (bitmap_new(sizeX * sizeY));
 }
 
-t_bitmap * bitmap_new3(size_t width, size_t height, size_t depth) {
-	return (bitmap_new(width * height * depth));
+t_bitmap * bitmap_new3(size_t sizeX, size_t sizeY, size_t sizeZ) {
+	return (bitmap_new(sizeX * sizeY * sizeZ));
 }
 
 /**
@@ -67,7 +67,7 @@ static size_t bitmap_index3(size_t x, size_t y, size_t z, size_t sizeX, size_t s
  */
 BIT bitmap_get(t_bitmap * bitmap, size_t x) {
 	BITMAP_UNIT * bits = (BITMAP_UNIT *) (bitmap + 1);
-	return (bits[x / BITS_PER_UNIT] & (1 << (x % BITS_PER_UNIT)) ? 1 : 0);
+	return (bits[x / BITS_PER_UNIT] & ((BITMAP_UNIT)1 << (x % BITS_PER_UNIT)) ? (BIT)1 : (BIT)0);
 }
 
 BIT bitmap_get2(t_bitmap * bitmap, size_t x, size_t y, size_t sizeX) {
@@ -83,11 +83,11 @@ BIT bitmap_get3(t_bitmap * bitmap, size_t x, size_t y, size_t z, size_t sizeX, s
  */
 void bitmap_set(t_bitmap * bitmap, size_t x) {
 	BITMAP_UNIT * bits = (BITMAP_UNIT *) (bitmap + 1);
-	*(bits + x / BITS_PER_UNIT) |= (1 << (x % BITS_PER_UNIT));
+	*(bits + x / BITS_PER_UNIT) |= ((BITMAP_UNIT)1 << (x % BITS_PER_UNIT));
 }
 
 void bitmap_set2(t_bitmap * bitmap, size_t x, size_t y, size_t sizeX) {
-	bitmap_set(bitmap, y * bitmap_index2(x, y, sizeX));
+	bitmap_set(bitmap, bitmap_index2(x, y, sizeX));
 }
 
 void bitmap_set3(t_bitmap * bitmap, size_t x, size_t y, size_t z, size_t sizeX, size_t sizeY) {
@@ -206,6 +206,7 @@ t_bitmap * bitmap_not(t_bitmap * a, t_bitmap * dst) {
 	}
 	return (dst);
 }
+
 /** write the bitmap on the given flux */
 void bitmap_printf(t_bitmap * bitmap, FILE * fd) {
 	BITMAP_ITER_START(bitmap, bit, i, j) {
@@ -214,29 +215,148 @@ void bitmap_printf(t_bitmap * bitmap, FILE * fd) {
 	BITMAP_ITER_END(bitmap, bit, i, j);
 }
 
-/** write the bitmap on the given file description with a buffer size of size 'bufsize' */
-void bitmap_write(t_bitmap * bitmap, int fd, size_t bufsize) {
-	char buf[bufsize];
-	size_t k = 0;
+void bitmap_printf2(t_bitmap * bitmap, FILE * fd, size_t sizeX) {
+	size_t countX = 0;
 	BITMAP_ITER_START(bitmap, bit, i, j) {
-		buf[k++] = bit ? '1' : '0';
-		if (k >= bufsize) {
-			write(fd, buf, bufsize);
-			k = 0;
+		fprintf(fd, "%c", bit ? '1' : '0');
+		if (++countX % sizeX == 0) {
+			fprintf(fd, "\n");
+			countX = 0;
 		}
 	}
 	BITMAP_ITER_END(bitmap, bit, i, j);
 }
 
+void bitmap_printf3(t_bitmap * bitmap, FILE * fd, size_t sizeX, size_t sizeY) {
+	size_t countX = 0;
+	size_t countY = 0;
+	BITMAP_ITER_START(bitmap, bit, i, j) {
+		fprintf(fd, "%c", bit ? '1' : '0');
+		if (++countX % sizeX == 0) {
+			countX = 0;
+			fprintf(fd, "\n");
+			if (++countY % sizeY == 0) {
+				countY = 0;
+				fprintf(fd, "\n");
+			}
+		}
+	}
+	BITMAP_ITER_END(bitmap, bit, i, j);
+}
 
+/** write the bitmap on the given file description with a buffer size of size 'bufsize' */
+void bitmap_write(t_bitmap * bitmap, int fd, size_t bufsize) {
+	if (bufsize == 0) {
+		return ;
+	}
+	char buf[bufsize];
+	size_t k = 0;
+	BITMAP_ITER_START(bitmap, bit, i, j) {
+		buf[k++] = bit ? '1' : '0';
+		if (k == bufsize) {
+			write(fd, buf, bufsize);
+			k = 0;
+		}
+	}
+	BITMAP_ITER_END(bitmap, bit, i, j);
+	if (k > 0) {
+		write(fd, buf, k);
+	}
+}
 
+void bitmap_write2(t_bitmap * bitmap, int fd, size_t bufsize, size_t sizeX) {
+	if (bufsize == 0) {
+		return ;
+	}
+	char buf[bufsize];
+	size_t k = 0;
+	size_t countX = 0;
+	BITMAP_ITER_START(bitmap, bit, i, j) {
+		buf[k++] = bit ? '1' : '0';
+		if (k == bufsize) {
+			write(fd, buf, bufsize);
+			k = 0;
+		}
+		if (++countX % sizeX == 0) {
+			countX = 0;
+			buf[k++] = '\n';
+			if (k == bufsize) {
+				write(fd, buf, bufsize);
+				k = 0;
+			}
+		}
+	}
+	BITMAP_ITER_END(bitmap, bit, i, j);
+	if (k > 0) {
+		write(fd, buf, k);
+	}
+}
 
+void bitmap_write3(t_bitmap * bitmap, int fd, size_t bufsize, size_t sizeX, size_t sizeY) {
+	if (bufsize == 0) {
+		return ;
+	}
+	char buf[bufsize];
+	size_t k = 0;
+	size_t countX = 0;
+	size_t countY = 0;
+	BITMAP_ITER_START(bitmap, bit, i, j) {
+		buf[k++] = bit ? '1' : '0';
+		if (k == bufsize) {
+			write(fd, buf, bufsize);
+			k = 0;
+		}
+		if (++countX % sizeX == 0) {
+			countX = 0;
+			buf[k++] = '\n';
+			if (k == bufsize) {
+				write(fd, buf, bufsize);
+				k = 0;
+			}
+			if (++countY % sizeY == 0) {
+				countY = 0;
+				buf[k++] = '\n';
+				if (k == bufsize) {
+					write(fd, buf, bufsize);
+					k = 0;
+				}
+			}
+		}
+	}
+	BITMAP_ITER_END(bitmap, bit, i, j);
+	if (k > 0) {
+		write(fd, buf, k);
+	}
+}
 
 /*
 int main() {
-	t_bitmap * bitmap = bitmap_new(16);
-	bitmap_set(bitmap, 1);
-	bitmap_write(bitmap, 1, 16);
-	bitmap_delete(bitmap);
+	{
+		size_t w = 16;
+		size_t x = 1;
+		size_t bufsize = 16;
+		t_bitmap * bitmap = bitmap_new(w);
+		bitmap_set(bitmap, x);
+		bitmap_write(bitmap, 1, bufsize);
+		bitmap_delete(bitmap);
+		puts("\n");
+	}
+	
+	{
+		size_t w = 16;
+		size_t h = 8;
+		size_t x = 8;
+		size_t y = 0;
+		size_t bufsize = 16;
+		t_bitmap * bitmap = bitmap_new2(w, h);
+		bitmap_set2(bitmap, x, y, w);
+		bitmap_write2(bitmap, 1, bufsize, w);
+		bitmap_delete(bitmap);
+		puts("\n");
+	}
+	
+	
 	return (0);
-}*/
+}
+
+*/
