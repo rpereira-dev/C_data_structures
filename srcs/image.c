@@ -166,7 +166,7 @@ t_image * image_blur(t_image * image, t_image * dst, size_t depth) {
 	}
 	return (dst);
 }
-
+/*
 int main() {
 	t_image * img = image_new(2, 2, IMAGE_RGBA);
 	image_set_r(img, 0, 0, 255);
@@ -180,4 +180,4 @@ int main() {
 
 	image_delete(img);
 }
-
+*/

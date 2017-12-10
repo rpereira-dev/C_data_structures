@@ -232,11 +232,11 @@ void bitmap_write(t_bitmap * bitmap, int fd, size_t bufsize) {
 
 
 
-
+/*
 int main() {
 	t_bitmap * bitmap = bitmap_new(16);
 	bitmap_set(bitmap, 1);
 	bitmap_write(bitmap, 1, 16);
 	bitmap_delete(bitmap);
 	return (0);
-}
+}*/
