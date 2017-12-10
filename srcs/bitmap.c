@@ -12,13 +12,13 @@
 /**
  * Create a new bitmap
  *
- * e.g: t_bitmap = image_new(16);
- * e.g: t_bitmap = image_new2(16, 16);
- * e.g: t_bitmap = image_new3(16, 16, 16);
+ * e.g: t_bitmap = bitmap_new(16);
+ * e.g: t_bitmap = bitmap_new2(16, 16);
+ * e.g: t_bitmap = bitmap_new3(16, 16, 16);
  */
 t_bitmap * bitmap_new(size_t sizeX) {
 	size_t size = sizeX / BITS_PER_UNIT + (sizeX % BITS_PER_UNIT != 0);
-	t_bitmap * bitmap = (t_bitmap *)malloc(sizeof(t_bitmap) + size);
+	t_bitmap * bitmap = (t_bitmap *)malloc(sizeof(t_bitmap) + size * sizeof(BITMAP_UNIT));
 	if (bitmap == NULL) {
 		return (NULL);
 	}
@@ -328,7 +328,6 @@ void bitmap_write3(t_bitmap * bitmap, int fd, size_t bufsize, size_t sizeX, size
 		write(fd, buf, k);
 	}
 }
-
 /*
 int main() {
 	{
@@ -358,5 +357,4 @@ int main() {
 	
 	return (0);
 }
-
 */

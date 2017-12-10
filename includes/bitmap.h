@@ -17,7 +17,7 @@
 # include <unistd.h>
 
 /**
- * the primordial type to be used as unit of the bit representation.
+ * the primitive type to be used as unit of the bit representation.
   	When dealing with huge bitmap, better use a large type like 'size_t',
 	if dealing with small bitmaps, use 'BYTE'
 */
@@ -34,9 +34,9 @@ typedef struct	s_bitmap {
 /**
  * Create a new bitmap
  *
- * e.g: t_bitmap = image_new(16);
- * e.g: t_bitmap = image_new2(16, 16);
- * e.g: t_bitmap = image_new3(16, 16, 16);
+ * e.g: t_bitmap = bitmap_new(16);
+ * e.g: t_bitmap = bitmap_new2(16, 16);
+ * e.g: t_bitmap = bitmap_new3(16, 16, 16);
  */
 t_bitmap * bitmap_new(size_t sizeX);
 t_bitmap * bitmap_new2(size_t sizeX, size_t sizeY);
