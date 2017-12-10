@@ -10,6 +10,13 @@
 # include "bitmap.h"
 
 /**
+ * set every bits to zero
+ */
+void bitmap_zeroes(t_bitmap * bitmap) {
+	memset(bitmap + 1, 0, bitmap->size * sizeof(BITMAP_UNIT));
+}
+
+/**
  * Create a new bitmap
  *
  * e.g: t_bitmap = bitmap_new(16);
@@ -23,7 +30,6 @@ t_bitmap * bitmap_new(size_t sizeX) {
 		return (NULL);
 	}
 	bitmap->size = size;
-	memset(bitmap + 1, 0, size);
 	return (bitmap);
 }
 
@@ -208,17 +214,17 @@ t_bitmap * bitmap_not(t_bitmap * a, t_bitmap * dst) {
 }
 
 /** write the bitmap on the given flux */
-void bitmap_printf(t_bitmap * bitmap, FILE * fd) {
+void bitmap_printf(t_bitmap * bitmap, char set, char unset, FILE * fd) {
 	BITMAP_ITER_START(bitmap, bit, i, j) {
-		fprintf(fd, "%c", bit ? '1' : '0');
+		fprintf(fd, "%c", bit ? set : unset);
 	}
 	BITMAP_ITER_END(bitmap, bit, i, j);
 }
 
-void bitmap_printf2(t_bitmap * bitmap, FILE * fd, size_t sizeX) {
+void bitmap_printf2(t_bitmap * bitmap, char set, char unset, FILE * fd, size_t sizeX) {
 	size_t countX = 0;
 	BITMAP_ITER_START(bitmap, bit, i, j) {
-		fprintf(fd, "%c", bit ? '1' : '0');
+		fprintf(fd, "%c", bit ? set : unset);
 		if (++countX % sizeX == 0) {
 			fprintf(fd, "\n");
 			countX = 0;
@@ -227,11 +233,11 @@ void bitmap_printf2(t_bitmap * bitmap, FILE * fd, size_t sizeX) {
 	BITMAP_ITER_END(bitmap, bit, i, j);
 }
 
-void bitmap_printf3(t_bitmap * bitmap, FILE * fd, size_t sizeX, size_t sizeY) {
+void bitmap_printf3(t_bitmap * bitmap, char set, char unset, FILE * fd, size_t sizeX, size_t sizeY) {
 	size_t countX = 0;
 	size_t countY = 0;
 	BITMAP_ITER_START(bitmap, bit, i, j) {
-		fprintf(fd, "%c", bit ? '1' : '0');
+		fprintf(fd, "%c", bit ? set : unset);
 		if (++countX % sizeX == 0) {
 			countX = 0;
 			fprintf(fd, "\n");
@@ -245,79 +251,98 @@ void bitmap_printf3(t_bitmap * bitmap, FILE * fd, size_t sizeX, size_t sizeY) {
 }
 
 /** write the bitmap on the given file description with a buffer size of size 'bufsize' */
-void bitmap_write(t_bitmap * bitmap, int fd, size_t bufsize) {
+int bitmap_write(t_bitmap * bitmap, char set, char unset, int fd, size_t bufsize) {
 	if (bufsize == 0) {
-		return ;
+		return (-1);
 	}
 	char buf[bufsize];
 	size_t k = 0;
 	BITMAP_ITER_START(bitmap, bit, i, j) {
-		buf[k++] = bit ? '1' : '0';
+		buf[k++] = bit ? set : unset;
 		if (k == bufsize) {
-			write(fd, buf, bufsize);
+			if (write(fd, buf, bufsize)  < 0) {
+				return (-1);
+			}
 			k = 0;
 		}
 	}
 	BITMAP_ITER_END(bitmap, bit, i, j);
+	buf[k++] = '\n';
 	if (k > 0) {
-		write(fd, buf, k);
+		if (write(fd, buf, k) < 0) {
+			return (-1);
+		}
 	}
+	return (1);
 }
 
-void bitmap_write2(t_bitmap * bitmap, int fd, size_t bufsize, size_t sizeX) {
+int bitmap_write2(t_bitmap * bitmap, char set, char unset, int fd, size_t bufsize, size_t sizeX) {
 	if (bufsize == 0) {
-		return ;
+		return (-1);
 	}
 	char buf[bufsize];
 	size_t k = 0;
 	size_t countX = 0;
 	BITMAP_ITER_START(bitmap, bit, i, j) {
-		buf[k++] = bit ? '1' : '0';
+		buf[k++] = bit ? set : unset;
 		if (k == bufsize) {
-			write(fd, buf, bufsize);
+			if (write(fd, buf, bufsize)  < 0) {
+				return (-1);
+			}
 			k = 0;
 		}
 		if (++countX % sizeX == 0) {
 			countX = 0;
 			buf[k++] = '\n';
 			if (k == bufsize) {
-				write(fd, buf, bufsize);
+				if (write(fd, buf, bufsize)  < 0) {
+					return (-1);
+				}
 				k = 0;
 			}
 		}
 	}
 	BITMAP_ITER_END(bitmap, bit, i, j);
 	if (k > 0) {
-		write(fd, buf, k);
+		if (write(fd, buf, k) < 0) {
+			return (-1);
+		}
 	}
+	return (1);
 }
 
-void bitmap_write3(t_bitmap * bitmap, int fd, size_t bufsize, size_t sizeX, size_t sizeY) {
+int bitmap_write3(t_bitmap * bitmap, char set, char unset, int fd, size_t bufsize, size_t sizeX, size_t sizeY) {
 	if (bufsize == 0) {
-		return ;
+		return (-1);
 	}
 	char buf[bufsize];
 	size_t k = 0;
 	size_t countX = 0;
 	size_t countY = 0;
 	BITMAP_ITER_START(bitmap, bit, i, j) {
-		buf[k++] = bit ? '1' : '0';
+		buf[k++] = bit ? set : unset;
 		if (k == bufsize) {
-			write(fd, buf, bufsize);
+			if (write(fd, buf, bufsize)  < 0) {
+				return (-1);
+			}
 			k = 0;
 		}
 		if (++countX % sizeX == 0) {
 			countX = 0;
 			buf[k++] = '\n';
 			if (k == bufsize) {
-				write(fd, buf, bufsize);
+				if (write(fd, buf, bufsize)  < 0) {
+					return (-1);
+				}
 				k = 0;
 			}
 			if (++countY % sizeY == 0) {
 				countY = 0;
 				buf[k++] = '\n';
 				if (k == bufsize) {
-					write(fd, buf, bufsize);
+					if (write(fd, buf, bufsize)  < 0) {
+						return (-1);
+					}
 					k = 0;
 				}
 			}
@@ -325,36 +350,64 @@ void bitmap_write3(t_bitmap * bitmap, int fd, size_t bufsize, size_t sizeX, size
 	}
 	BITMAP_ITER_END(bitmap, bit, i, j);
 	if (k > 0) {
-		write(fd, buf, k);
+		if (write(fd, buf, k) < 0) {
+			return (-1);
+		}
 	}
+	return (1);
 }
+
+
+t_bitmap * bitmap_conway(t_bitmap * bitmap, t_bitmap * dst) {
+	size_t x;
+	
+	if (bitmap == dst || dst == NULL) {
+		dst = bitmap_new(bitmap->size * BITS_PER_UNIT);
+	} else if (bitmap->size != dst->size) {
+		return (NULL);
+	}
+	bitmap_zeroes(dst);
+	size_t end = bitmap->size * BITS_PER_UNIT - 1;
+	for (x = 1 ; x < end ; x++) {
+		if (bitmap_get(bitmap, x - 1) ^ bitmap_get(bitmap, x + 1)) {
+			bitmap_set(dst, x);
+		}
+	}
+	return (dst);
+}
+
 /*
 int main() {
+
+	
 	{
-		size_t w = 16;
-		size_t x = 1;
-		size_t bufsize = 16;
+		//the code bellow generate a serpinsky fractal with a height of 96
+		size_t h = 96;
+		size_t w = h * 2;
+		size_t x = w / 2 - 1;
+		size_t bufsize = 2048;
+		char set = 'x';
+		char unset = '.';
 		t_bitmap * bitmap = bitmap_new(w);
 		bitmap_set(bitmap, x);
-		bitmap_write(bitmap, 1, bufsize);
+	
+		size_t i;
+		bitmap_write(bitmap, set, unset, 1, bufsize);
+		t_bitmap * swap = bitmap_clone(bitmap);
+		for (i = 0 ; i < h ; i++) {
+			if (i % 2 == 0) {
+				bitmap_conway(bitmap, swap);
+				bitmap_write(swap, set, unset, 1, bufsize);
+			} else {
+				bitmap_conway(swap, bitmap);
+				bitmap_write(bitmap, set, unset, 1, bufsize);
+			}
+		}
+
 		bitmap_delete(bitmap);
 		puts("\n");
 	}
-	
-	{
-		size_t w = 16;
-		size_t h = 8;
-		size_t x = 8;
-		size_t y = 0;
-		size_t bufsize = 16;
-		t_bitmap * bitmap = bitmap_new2(w, h);
-		bitmap_set2(bitmap, x, y, w);
-		bitmap_write2(bitmap, 1, bufsize, w);
-		bitmap_delete(bitmap);
-		puts("\n");
-	}
-	
-	
+
 	return (0);
 }
 */
