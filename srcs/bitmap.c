@@ -109,7 +109,7 @@ void bitmap_unset(t_bitmap * bitmap, size_t x) {
 }
 
 void bitmap_unset2(t_bitmap * bitmap, size_t x, size_t y, size_t sizeX) {
-	bitmap_unset(bitmap, y * bitmap_index2(x, y, sizeX));
+	bitmap_unset(bitmap, bitmap_index2(x, y, sizeX));
 }
 
 void bitmap_unset3(t_bitmap * bitmap, size_t x, size_t y, size_t z, size_t sizeX, size_t sizeY) {
@@ -376,10 +376,48 @@ t_bitmap * bitmap_conway(t_bitmap * bitmap, t_bitmap * dst) {
 	return (dst);
 }
 
+t_bitmap * bitmap_conway2(t_bitmap * bitmap, t_bitmap * dst, size_t width, size_t height) {
+	if (bitmap == dst || dst == NULL) {
+		dst = bitmap_new(bitmap->size * BITS_PER_UNIT);
+	} else if (bitmap->size != dst->size) {
+		return (NULL);
+	}
+	bitmap_zeroes(dst);
+
+	size_t x, y;
+	size_t endx = width - 1;
+	size_t endy = height - 1;
+	for (x = 1 ; x < endx ; x++) {
+		for (y = 1 ; y < endy ; y++) {
+			int dx, dy;
+			int c = 0;
+			for (dx = -1; dx <= 1 ; dx++) {
+				for (dy = -1; dy <= 1 ; dy++) {
+					if (dx == 0 && dy == 0) {
+						continue ;
+					}
+					c += bitmap_get2(bitmap, x + dx, y + dy, width);
+				}
+			}
+			if (c == 2) {
+				if (bitmap_get2(bitmap, x, y, width)) {
+					bitmap_set2(dst, x, y, width);
+				}
+			} else if (c >= 3) {
+				bitmap_set2(dst, x, y, width);
+			} else {
+				bitmap_unset2(dst, x, y, width);
+			}
+		}
+	}
+	return (dst);
+}
 /*
+void clear_screen() {
+	system("clear");
+} 
 int main() {
 
-	
 	{
 		//the code bellow generate a serpinsky fractal with a height of 96
 		size_t h = 96;
@@ -408,6 +446,42 @@ int main() {
 		puts("\n");
 	}
 
+
+	{
+		//the code bellow is a simulation of original conway game of life
+		size_t w = 32;
+		size_t h = 32;
+		size_t bufsize = 2048;
+		char set = 'x';
+		char unset = '.';
+		t_bitmap * bitmap = bitmap_new2(w, h);
+		
+		size_t cx = w / 2;
+		size_t cy = h / 2;
+		bitmap_set2(bitmap, cx, cy, w);
+		bitmap_set2(bitmap, cx - 1, cy, w);
+		bitmap_set2(bitmap, cx + 1, cy, w);
+		bitmap_set2(bitmap, cx, cy - 1, w);
+		bitmap_set2(bitmap, cx, cy + 1, w);
+
+		size_t i = 0;
+		bitmap_write2(bitmap, set, unset, 1, bufsize, w);
+		t_bitmap * swap = bitmap_clone(bitmap);
+		do {
+			clear_screen();
+			if (i % 2 == 0) {
+				bitmap_conway2(bitmap, swap, w, h);
+				bitmap_write2(swap, set, unset, 1, bufsize, w);
+			} else {
+				bitmap_conway2(swap, bitmap, w, h);
+				bitmap_write2(bitmap, set, unset, 1, bufsize, w);
+			}
+			++i;
+			usleep(100000);
+		} while (i < h);
+		bitmap_delete(bitmap);
+		puts("\n");
+	}	
+
 	return (0);
-}
-*/
+}*/
