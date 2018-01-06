@@ -7,7 +7,7 @@
  *	PEREIRA Romain
  */
 
-#include "linked_list.h"
+#include "list.h"
 
 int list_init(t_list * list) {
 	list->head = (t_list_node*)malloc(sizeof(t_list_node));

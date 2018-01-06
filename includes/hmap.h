@@ -11,7 +11,7 @@
 # define HMAP_H
 
 # include "common.h"
-# include "linked_list.h"
+# include "list.h"
 
 /**
  *  Generic hash map implementation in C89:

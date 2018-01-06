@@ -11,7 +11,7 @@
 # define BTREE_H
 
 # include "common.h"
-# include "array_list.h"
+# include "array.h"
 
 typedef struct  s_btree_node {
     void                * value;
@@ -20,10 +20,10 @@ typedef struct  s_btree_node {
 }               t_btree_node;
 
 typedef struct  s_btree {
-    t_array_list        * values;
-    t_btree_node        * head;
-    t_cmp_function      cmpf;
-    unsigned long int   size;
+    t_array		* values;
+    t_btree_node	* head;
+    t_cmp_function	cmpf;
+    size_t		size;
 }               t_btree;
 
 /**
