@@ -1,0 +1,180 @@
+\hypertarget{honshu_8h}{}\section{/home/rpereira/tmphonshu/includes/honshu.h File Reference}
+\label{honshu_8h}\index{/home/rpereira/tmphonshu/includes/honshu.\+h@{/home/rpereira/tmphonshu/includes/honshu.\+h}}
+
+
+Les structures principales du jeu.  
+
+
+{\ttfamily \#include $<$string.\+h$>$}\\*
+{\ttfamily \#include $<$stdio.\+h$>$}\\*
+{\ttfamily \#include $<$stdlib.\+h$>$}\\*
+{\ttfamily \#include $<$stdarg.\+h$>$}\\*
+{\ttfamily \#include $<$time.\+h$>$}\\*
+{\ttfamily \#include $<$errno.\+h$>$}\\*
+{\ttfamily \#include $<$unistd.\+h$>$}\\*
+{\ttfamily \#include \char`\"{}types.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}flags.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}grille.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}tuile.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}list.\+h\char`\"{}}\\*
+\subsection*{Data Structures}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{structs__honshu}{s\+\_\+honshu}
+\end{DoxyCompactItemize}
+\subsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \hyperlink{honshu_8h_a247da1332d540fa6c17496e71cd1eba2}{H\+S\+\_\+\+I\+N\+I\+T\+I\+A\+L\+I\+Z\+ED}~(1 $<$$<$ 0)
+\item 
+\#define \hyperlink{honshu_8h_a7815c0a4362461d8f59a4410aa15f062}{H\+S\+\_\+\+R\+U\+N\+N\+I\+NG}~(1 $<$$<$ 1)
+\end{DoxyCompactItemize}
+\subsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+typedef struct \hyperlink{structs__honshu}{s\+\_\+honshu} {\bfseries t\+\_\+hs}\hypertarget{honshu_8h_a67f3fdbba0a464f1c601b6feb3c61845}{}\label{honshu_8h_a67f3fdbba0a464f1c601b6feb3c61845}
+
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{structs__honshu}{t\+\_\+hs} $\ast$ \hyperlink{honshu_8h_aa48c636dc66e8aefd5f1625b139d3266}{hs\+\_\+read} (char $\ast$tuiles, char $\ast$save)
+\begin{DoxyCompactList}\small\item\em Initialise le jeu avec le fichier donnée. \end{DoxyCompactList}\item 
+\hyperlink{structs__honshu}{t\+\_\+hs} $\ast$ \hyperlink{honshu_8h_a5ec826f1d3df8db75d5bdecfd76995a1}{hs\+\_\+rand} (\hyperlink{types_8h_ac6885dbfb371c33e523c7fb046118b36}{I\+N\+D\+EX} mean, \hyperlink{types_8h_ac6885dbfb371c33e523c7fb046118b36}{I\+N\+D\+EX} amplitude)
+\begin{DoxyCompactList}\small\item\em Initialise le jeu de manière aléatoire. \end{DoxyCompactList}\item 
+void \hyperlink{honshu_8h_a4e0a9714eb50c015d12a15962ab41216}{hs\+\_\+delete} (\hyperlink{structs__honshu}{t\+\_\+hs} $\ast$hs)
+\begin{DoxyCompactList}\small\item\em \char`\"{}\+De-\/\+Alloue\char`\"{} le jeu \end{DoxyCompactList}\item 
+int \hyperlink{honshu_8h_a93571e70089e0d474a434bf691e4362e}{hs\+\_\+export} (\hyperlink{structs__honshu}{t\+\_\+hs} $\ast$hs, char $\ast$tuiles\+\_\+chemin, char $\ast$partie\+\_\+chemin)
+\begin{DoxyCompactList}\small\item\em sauvegarde les tuiles et la partie \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Les structures principales du jeu. 
+
+\begin{DoxyAuthor}{Authors}
+Romain P\+E\+R\+E\+I\+RA, Douha O\+U\+R\+I\+MI, Afizullah R\+A\+H\+M\+A\+NY, Guang\+Yue C\+H\+EN Ce fichier contient toutes les fonctions principales du jeu (import, export...), et importes tous les fichiers header 
+\end{DoxyAuthor}
+
+
+\subsection{Macro Definition Documentation}
+\index{honshu.\+h@{honshu.\+h}!H\+S\+\_\+\+I\+N\+I\+T\+I\+A\+L\+I\+Z\+ED@{H\+S\+\_\+\+I\+N\+I\+T\+I\+A\+L\+I\+Z\+ED}}
+\index{H\+S\+\_\+\+I\+N\+I\+T\+I\+A\+L\+I\+Z\+ED@{H\+S\+\_\+\+I\+N\+I\+T\+I\+A\+L\+I\+Z\+ED}!honshu.\+h@{honshu.\+h}}
+\subsubsection[{\texorpdfstring{H\+S\+\_\+\+I\+N\+I\+T\+I\+A\+L\+I\+Z\+ED}{HS_INITIALIZED}}]{\setlength{\rightskip}{0pt plus 5cm}\#define H\+S\+\_\+\+I\+N\+I\+T\+I\+A\+L\+I\+Z\+ED~(1 $<$$<$ 0)}\hypertarget{honshu_8h_a247da1332d540fa6c17496e71cd1eba2}{}\label{honshu_8h_a247da1332d540fa6c17496e71cd1eba2}
+game status flag indiquant que le jeu est initialisé \index{honshu.\+h@{honshu.\+h}!H\+S\+\_\+\+R\+U\+N\+N\+I\+NG@{H\+S\+\_\+\+R\+U\+N\+N\+I\+NG}}
+\index{H\+S\+\_\+\+R\+U\+N\+N\+I\+NG@{H\+S\+\_\+\+R\+U\+N\+N\+I\+NG}!honshu.\+h@{honshu.\+h}}
+\subsubsection[{\texorpdfstring{H\+S\+\_\+\+R\+U\+N\+N\+I\+NG}{HS_RUNNING}}]{\setlength{\rightskip}{0pt plus 5cm}\#define H\+S\+\_\+\+R\+U\+N\+N\+I\+NG~(1 $<$$<$ 1)}\hypertarget{honshu_8h_a7815c0a4362461d8f59a4410aa15f062}{}\label{honshu_8h_a7815c0a4362461d8f59a4410aa15f062}
+flag indiquant que le jeu boucle infini 
+
+\subsection{Function Documentation}
+\index{honshu.\+h@{honshu.\+h}!hs\+\_\+delete@{hs\+\_\+delete}}
+\index{hs\+\_\+delete@{hs\+\_\+delete}!honshu.\+h@{honshu.\+h}}
+\subsubsection[{\texorpdfstring{hs\+\_\+delete(t\+\_\+hs $\ast$hs)}{hs_delete(t_hs *hs)}}]{\setlength{\rightskip}{0pt plus 5cm}void hs\+\_\+delete (
+\begin{DoxyParamCaption}
+\item[{{\bf t\+\_\+hs} $\ast$}]{hs}
+\end{DoxyParamCaption}
+)}\hypertarget{honshu_8h_a4e0a9714eb50c015d12a15962ab41216}{}\label{honshu_8h_a4e0a9714eb50c015d12a15962ab41216}
+
+
+\char`\"{}\+De-\/\+Alloue\char`\"{} le jeu 
+
+
+\begin{DoxyParams}{Parameters}
+{\em hs} & \+: instance hs (partie jeu) qui va etre free (qui avait été allouée par hs\+\_\+read/hs\+\_\+rand) \\
+\hline
+\end{DoxyParams}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{honshu_8h_aa48c636dc66e8aefd5f1625b139d3266}{hs\+\_\+read} 
+
+\hyperlink{honshu_8h_a5ec826f1d3df8db75d5bdecfd76995a1}{hs\+\_\+rand} 
+\end{DoxySeeAlso}
+\index{honshu.\+h@{honshu.\+h}!hs\+\_\+export@{hs\+\_\+export}}
+\index{hs\+\_\+export@{hs\+\_\+export}!honshu.\+h@{honshu.\+h}}
+\subsubsection[{\texorpdfstring{hs\+\_\+export(t\+\_\+hs $\ast$hs, char $\ast$tuiles\+\_\+chemin, char $\ast$partie\+\_\+chemin)}{hs_export(t_hs *hs, char *tuiles_chemin, char *partie_chemin)}}]{\setlength{\rightskip}{0pt plus 5cm}int hs\+\_\+export (
+\begin{DoxyParamCaption}
+\item[{{\bf t\+\_\+hs} $\ast$}]{hs, }
+\item[{char $\ast$}]{tuiles\+\_\+chemin, }
+\item[{char $\ast$}]{partie\+\_\+chemin}
+\end{DoxyParamCaption}
+)}\hypertarget{honshu_8h_a93571e70089e0d474a434bf691e4362e}{}\label{honshu_8h_a93571e70089e0d474a434bf691e4362e}
+
+
+sauvegarde les tuiles et la partie 
+
+
+\begin{DoxyParams}{Parameters}
+{\em hs} & \+: une instance du jeu \\
+\hline
+{\em tuiles\+\_\+chemin} & \+: le chemin de la sauvegarde du fichier tuile \\
+\hline
+{\em partie\+\_\+chemin} & \+: le chemin de la sauvegarde du fichier partie \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+\+: 1 si succès, 0 sinon 
+\end{DoxyReturn}
+on ouvre le fichier qui décrit les tuiles
+
+on ouvre le fichier de la partie
+
+on ecrit le nombre de tuile au total dans le fichier
+
+on ecrit chaque tuiles
+
+on écrit la partie
+
+on écrit la taille de la carte et de la main
+
+on écrit l\textquotesingle{}id des tuiles
+
+id de la tuile de départ (à insérer en (n/2, n/2)
+
+on ferme le fichier \index{honshu.\+h@{honshu.\+h}!hs\+\_\+rand@{hs\+\_\+rand}}
+\index{hs\+\_\+rand@{hs\+\_\+rand}!honshu.\+h@{honshu.\+h}}
+\subsubsection[{\texorpdfstring{hs\+\_\+rand(\+I\+N\+D\+E\+X mean, I\+N\+D\+E\+X amplitude)}{hs_rand(INDEX mean, INDEX amplitude)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\+\_\+hs}$\ast$ hs\+\_\+rand (
+\begin{DoxyParamCaption}
+\item[{{\bf I\+N\+D\+EX}}]{mean, }
+\item[{{\bf I\+N\+D\+EX}}]{amplitude}
+\end{DoxyParamCaption}
+)}\hypertarget{honshu_8h_a5ec826f1d3df8db75d5bdecfd76995a1}{}\label{honshu_8h_a5ec826f1d3df8db75d5bdecfd76995a1}
+
+
+Initialise le jeu de manière aléatoire. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em mean} & \+: mean valeur de \textquotesingle{}n\textquotesingle{} \\
+\hline
+{\em amplitude} & \+: amplitude pour \textquotesingle{}n\textquotesingle{} \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Une nouvelle partie d\textquotesingle{}honshu allouée et initialisée, generée de façon aléatoire , N\+U\+LL si erreur 
+\end{DoxyReturn}
+on genere un \textquotesingle{}n\textquotesingle{} aléatoire
+
+on genere un nombre de tuile aléatoire
+
+on genere des tuiles aléatoires
+
+on insère une tuile aléatoire au centre \index{honshu.\+h@{honshu.\+h}!hs\+\_\+read@{hs\+\_\+read}}
+\index{hs\+\_\+read@{hs\+\_\+read}!honshu.\+h@{honshu.\+h}}
+\subsubsection[{\texorpdfstring{hs\+\_\+read(char $\ast$tuiles, char $\ast$save)}{hs_read(char *tuiles, char *save)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\+\_\+hs}$\ast$ hs\+\_\+read (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{tuiles, }
+\item[{char $\ast$}]{save}
+\end{DoxyParamCaption}
+)}\hypertarget{honshu_8h_aa48c636dc66e8aefd5f1625b139d3266}{}\label{honshu_8h_aa48c636dc66e8aefd5f1625b139d3266}
+
+
+Initialise le jeu avec le fichier donnée. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em tuiles} & fichier où les tuiles sont déclarées \\
+\hline
+{\em save} & fichier ou le jeu est sauvegardé \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Une nouvelle partie d\textquotesingle{}honshu allouée et initialisée, N\+U\+LL si erreur . 
+\end{DoxyReturn}
