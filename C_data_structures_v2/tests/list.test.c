@@ -174,7 +174,6 @@ static void test_list_iterator(void) {
 	/** on vérifie que la liste est bonne */
 	unsigned int j = -1;
 	LIST_ITERATE_START(lst, unsigned int *, i) {
-		printf("%u : %u\n", j, *i);
 		CU_ASSERT(j++ == *i);
 		if (*i == (unsigned int)-1 || *i == 4 || *i == 7) {
 			LIST_ITERATE_POP(lst);

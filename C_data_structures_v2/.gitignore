@@ -1,5 +1,6 @@
-
 # Created by https://www.gitignore.io/api/c,windows
+bin/
+CUnit-Memory-Dump.xml
 
 ### C ###
 # Prerequisites

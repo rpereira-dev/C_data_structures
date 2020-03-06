@@ -1,7 +1,7 @@
 This is a C data structures library
 
 It contains:
-    - Array lists
+    - Array (as fragmented or defragmented vectors)
     - Linked list (which can be used as Queue or Stacks without performance loss)
     - Binary trees (which aren't auto-balanced yet)
     - Hash map

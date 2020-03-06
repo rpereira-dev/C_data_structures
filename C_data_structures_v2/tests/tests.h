@@ -13,4 +13,9 @@ void test_list(CU_pSuite suite);
 int test_init_list(void);
 int test_deinit_list(void);
 
+/** array.c tests */
+void test_array(CU_pSuite suite);
+int test_init_array(void);
+int test_deinit_array(void);
+
 #endif

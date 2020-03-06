@@ -28,6 +28,7 @@ int main(void) {
 
 	/** les tests sont ajoutés ici: */
 	add_suite("list.c",    test_list,    test_init_list,    test_deinit_list);
+	add_suite("array.c",   test_array,   test_init_array,   test_deinit_array);
 
 	/** de-initialisation of CUnit */
 	CU_basic_set_mode(CU_BRM_VERBOSE);
